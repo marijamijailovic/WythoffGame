@@ -4,8 +4,15 @@ using namespace std;
 
 void get_min_positive(vector<int> A, vector<int> B, int n)
 {
- //merge A and B in sort order and find the missing pos number
- vector<int> C;
+  //merge A and B in sort order and find the missing pos number
+  vector<int> C;
+  merge(A.begin(), A.end(), B.begin()+1, B.end(), C.begin());
+  for(int i=0;i<n;i++){
+    if(C[i] != i){
+      break;
+    }
+  }
+  A.push_back(i);
 }
 
 int main()
@@ -26,8 +33,8 @@ int main()
   B[0] = 0;
 
   for(int i=1;i<=n;i++){
-   B.push_back(A[i]+a*n);
-   get_min_positive(A, B, n);
+    B.push_back(A[i]+a*n);
+    get_min_positive(A, B, n);
   }
 
   return 0; 
