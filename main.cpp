@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <set>
+#include <time.h>
 
 using namespace std;
 
@@ -10,6 +11,8 @@ void get_min_positive(vector<int>& A, const vector<int>& B);
 
 int main()
 {
+  //TODO allowedMove()
+  
   //Recursive Characterization of the P-Positions
   //A_n = mex{A_i, B_i : i<n} -- mex najmanji nenegativan broj koji nije u A_n
   //mex{} = 0
@@ -26,7 +29,7 @@ int main()
 
   calculate_P_Position(A,B,a,n);
 
-  cout << "Test" << endl;
+/*  cout << "Test" << endl;
   for(auto a : A){
     cout << a << " ";
   }
@@ -37,7 +40,41 @@ int main()
     cout << b << " ";
   }
   cout << endl;
+*/
+
+  bool winner = false;
+  int x, y;
+  srand(time(NULL));
+
+  cout << "##########   WYTHOFF GAME  ##########" << endl;
+  cout << "There is two piles of token : ";
+  x = rand()%100;
+  y = rand()%100;
   
+  cout << "(" << x << ", " << y << ")" << endl; 
+  
+  //TODO
+ /* while(!winner){
+    //Player turn
+    cout << "How many piles do you want to remove?" << endl;
+    cin >> x;
+    cin >> y;
+    while(!isMoveAllow(x,y)){
+      cout << "Poruka upozorenja i pokusaj opet sa unosom" << endl;
+      cin >> x;
+      cin >> y;
+    }
+    
+    cout << "Current state od piles is (<< x << ", " << y << ")" << endl;
+
+    //Computer turn
+    //getPPositionTable();
+    //if(CurrentStateIsP()) ---> computer is loser , but play anything
+    //else{
+      tryToReachToPPosition() ---> jer ako skoci na p poziciju, to je novo stanje i computer je pobedio
+    }
+
+  }*/
 
   return 0; 
 }
