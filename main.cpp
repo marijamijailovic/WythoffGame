@@ -1,19 +1,12 @@
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
 
 using namespace std;
 
-void get_min_positive(vector<int> A, vector<int> B, int n)
-{
-  //merge A and B in sort order and find the missing pos number
-  vector<int> C;
-  merge(A.begin(), A.end(), B.begin()+1, B.end(), C.begin());
-  for(int i=0;i<n;i++){
-    if(C[i] != i){
-      break;
-    }
-  }
-  A.push_back(i);
-}
+void calculate_P_Position(vector<int>& A, vector<int>& B, int a, int n);
+void get_min_positive(vector<int>& A, const vector<int>& B);
 
 int main()
 {
@@ -28,14 +21,50 @@ int main()
 
   cin >> n;
   
-  A[0] = 0;
-  A[1] = 1;
-  B[0] = 0;
+  A.push_back(0);
+  B.push_back(0);
 
-  for(int i=1;i<=n;i++){
-    B.push_back(A[i]+a*n);
-    get_min_positive(A, B, n);
+  calculate_P_Position(A,B,a,n);
+
+  cout << "Test" << endl;
+  for(auto a : A){
+    cout << a << " ";
   }
+  cout << endl;
+  
+
+  for(auto b : B){
+    cout << b << " ";
+  }
+  cout << endl;
+  
 
   return 0; 
+}
+
+void calculate_P_Position(vector<int>& A, vector<int>& B, int a, int n)
+{
+
+  for(int i=1;i<=n;i++){
+    get_min_positive(A, B);
+    B.push_back(A.at(i)+a*i);
+  }
+}
+
+void get_min_positive(vector<int>& A, const vector<int>& B)
+{
+  //merge A and B in sort order and find the missing pos number
+  set<int> C;
+  
+  C.insert(A.begin(),A.end());
+  C.insert(B.begin(),B.end());
+  
+  int mex = 0;
+  for(auto c : C){
+    if(c != mex){
+      break;
+    }
+    mex++;
+  }
+  A.push_back(mex);
 }
