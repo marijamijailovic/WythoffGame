@@ -1,8 +1,10 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <iterator>
 #include <set>
 #include <time.h>
+#include <cmath>
 
 using namespace std;
 
@@ -10,7 +12,7 @@ void calculate_P_Position(vector<int>& A, vector<int>& B, int a, int n);
 void get_min_positive(vector<int>& A, const vector<int>& B);
 bool isMoveAllow(vector<int>& piles, int x, int y, int a);
 bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<int>& piles);
-vector<int> reach_P_position(const vector<int>& A,const vector<int>& B,const vector<int>& piles);
+void reach_P_position(const vector<int>& A, const vector<int>& B, vector<int>& piles, int a);
 
 int main()
 {
@@ -63,7 +65,7 @@ int main()
     cin >> x;
     cin >> y;
     while(!isMoveAllow(piles,x,y,a)){
-      cout << "Poruka upozorenja i pokusaj opet sa unosom" << endl;
+      cout << "Move " << x << ", " << y << " is invalid, please try again!" << endl;
       cin >> x;
       cin >> y;
     }
@@ -79,43 +81,94 @@ int main()
     }
 
     cout << "Computer turn ... " << endl;
+    
     //Computer turn
     if(isCurrentStateP(A,B,piles)){
-	//take random tokens, because it it P position, and whatever computer play the winner is player
-	//but only if the player know the tactics
-	computer_x = rand()%piles.at(0);
-	computer_y = rand()%piles.at(1);
+	    //take random tokens, because it it P position, and whatever computer play the winner is player
+	    //but only if the player know the tactics
+      cout << "P Pozicija" << endl;
+      //TODO ne RAND, vec pokusaj da skines sto vise mozes 
+      //AKO JE (0,y) ili (x,0) onda uzmi sve X, ili Y --> FIRST TYPE OF MOVE
+      //AKO JE (x,y) onda pokusaj da skines sve tako da je rezultat (0,0)
+      computer_x = rand()%piles.at(0);
+	    computer_y = rand()%piles.at(1);
+   
+      while(!isMoveAllow(piles,computer_x,computer_y,a)){
+        cout << "Move " << computer_x << ", " << computer_y << " is invalid, please try again!" << endl;
+        computer_x = rand()%piles.at(0);
+	      computer_y = rand()%piles.at(1);
+      }
+    
+      piles.at(0) -= computer_x;
+      piles.at(1) -= computer_y;
     }
     else{
-	//piles(0) - computer_x = A
-	//piles(1) - computer_y = B
-	vector<int> computer_move = reach_P_position(A,B,piles);
+      cout << "Nije P pozicija " << endl;
+	    reach_P_position(A,B,piles,a);
     }
-    //getPPositionTable();
-    //if(CurrentStateIsP()) ---> computer is loser , but play anything
-    //else{
-    //  tryToReachToPPosition() ---> jer ako skoci na p poziciju, to je novo stanje i computer je pobedio
-    //}
-
+    
+    cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
   }
 
   return 0; 
 }
 
-vector<int> reach_P_position(const vector<int>& A,const vector<int>& B,const vector<int>& piles, int a)
+void reach_P_position(const vector<int>& A,const vector<int>& B, vector<int>& piles, int a)
 {
-  vector<int> computer_move;
+  cout << "Pokusaj da dosegnes do P pozicije ... " << endl;
   //two case:
   //I  : if piles(0) is B_n, save n, then x = piles(0) and y = A_n,
   //II : if piles(0) is A_n, save n, if y > B_n then y  = B_n
   //                                 if y < B_n, d = y -x, m = donji_ceo(d/a) then x = A_m, y = B_m, m < n  
-  //
-  if(piles.
+  /*if(find(B.begin(),B.end(), piles.at(0)) != end(B)){ 
+    cout << "Prvi slucaj x je u B " << endl;
+    auto it = find(B.begin(),B.end(), piles.at(0));
+    int index = distance(B.begin(), it);
+    cout << index << endl; 
+  }*/
+  if(find(B.begin(), B.end(), piles.at(0)) != end(B)){
+    //computer_move.push_back(piles.at(0));
+    cout << "Prvi slucaj x je u B " << endl;
+    //(47, 74)
+    //piles_0 = 47, piles_1 = 74
+    //piles_1 = piles_0
+    //piles_0 = ono sto je na A poziciji koja odgovara onoj gde je B 47
+    //(19, 47)
+    auto it = find(B.begin(),B.end(), piles.at(0));
+    int index = distance(B.begin(), it);
+    cout << "Na poziciji " << index << " je " << A.at(index) << endl;
+    piles.insert(piles.end(), piles.at(0));
+    piles.insert(piles.begin(), A.at(index));
+  }
+  else if(find(A.begin(), A.end(), piles.at(0)) != end(A)){
+    cout << "Drugi slucaj x je u A " << endl;
+    auto it = find(A.begin(),A.end(), piles.at(0));
+    int index = distance(A.begin(), it);
+    if(piles.at(1) >= B.at(index)){
+      cout << "Prvi slucaj y je > B " << endl;
+      //(19,74)
+      //piles_0 = 19, piles_1 = 74
+      //piles_0 = piles_0
+      //piles_1 = ono sto je na B poziciji koja odgovvara onoj gde je A 19
+      //computer_move.push_back(piles.at(0));
+      //computer_move(B.at(find(index)));
+      cout << "Na poziciji " << index << " je " << B.at(index) << endl;
+      piles.insert(piles.end(), B.at(index));
+    }
+    else{
+      cout << "Drugi slucaj y je < B " << endl;
+      int d = piles.at(1) - piles.at(0);
+      int m = floor(d/a);
+      piles.insert(piles.begin(),A.at(m));
+      piles.insert(piles.end(),B.at(m));
+    }
+  }
+
 }
 
 bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<int>& piles)
 {
-  if(A.find(piles.at(0)) && B.find(piles.at(1))) {
+  if(find(A.begin(), A.end(), piles.at(0)) != end(A) && find(B.begin(), A.begin(), piles.at(1)) != end(B)) {
     return true;
   }
   return false;
@@ -128,7 +181,7 @@ bool isMoveAllow(vector<int>& piles, int x, int y, int a)
     return false;
   } 
 
-  if(x > 0 && y > 0 && !abs(x - y) < a){
+  if(x > 0 && y > 0 && !(abs(x - y) < a)){
     return false;
   }
 
