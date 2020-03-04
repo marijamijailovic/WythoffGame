@@ -84,12 +84,7 @@ int main()
     
     //Computer turn
     if(isCurrentStateP(A,B,piles)){
-	    //take random tokens, because it it P position, and whatever computer play the winner is player
-	    //but only if the player know the tactics
       cout << "P Pozicija" << endl;
-      //TODO ne RAND, vec pokusaj da skines sto vise mozes 
-      //AKO JE (0,y) ili (x,0) onda uzmi sve X, ili Y --> FIRST TYPE OF MOVE
-      //AKO JE (x,y) onda pokusaj da skines sve tako da je rezultat (0,0)
       computer_x = rand()%piles.at(0);
 	    computer_y = rand()%piles.at(1);
    
@@ -103,6 +98,14 @@ int main()
       piles.at(1) -= computer_y;
     }
     else{
+      //try to win
+      computer_x = piles.at(0);
+      computer_y = piles.at(1);
+      if(isMoveAllow(piles, computer_x, computer_y)){
+        cout << "Move " << computer_x << ", " << computer_y << " is wining move!" << endl;
+        winner = true;
+        break;
+      }
       cout << "Nije P pozicija " << endl;
 	    reach_P_position(A,B,piles,a);
     }
