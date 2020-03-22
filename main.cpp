@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <iterator>
 #include <set>
 #include <time.h>
@@ -8,7 +9,12 @@
 
 using namespace std;
 
-void calculate_P_Position(vector<int>& A, vector<int>& B, int a, int n);
+void recursive_characterizaton_of_P_Position(vector<int>& A, vector<int>& B, int a, int n);
+void algebraic_characterization_of_P_Position(vector<int>& A, vector<int>& B, int a, int n);
+void alpha_continued_fractions(vector<int>& alpha, int a, int n);
+void p_q_numerations(vector<int>& p, vector<int>& q, const vector<int>& alpha, int n);
+void p_system_representation(map<int, vector<int>>& p_system, const vector<int>& p, int n);
+void q_system_representation(map<int, vector<int>>& q_system, const vector<int>& q, int n);
 void get_min_positive(vector<int>& A, const vector<int>& B);
 bool isMoveAllow(vector<int>& piles, int x, int y, int a);
 bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<int>& piles);
@@ -22,38 +28,67 @@ int main()
   //mex{} = 0
   vector<int> A;
   vector<int> B;
-  int n;
+  int n = 17;
   int a = 2;
-
-  cin >> n;
   
   A.push_back(0);
   B.push_back(0);
+  
+  //recursive_characterizaton_of_P_Position(A,B,2,n);
 
-  calculate_P_Position(A,B,a,n);
+  //algebraic_characterization_of_P_Position(A,B,a,n);
 
-/*  cout << "Test" << endl;
+  /*cout << "TEST FOR ALGEBRAIC" << endl;
+
   for(auto a : A){
-    cout << a << " ";
+    cout << a << " "; 
   }
   cout << endl;
-  
 
   for(auto b : B){
-    cout << b << " ";
+    cout << b << " "; 
   }
   cout << endl;
-*/
+  */
 
+  //continued fractions and systems of numeration
+  //alpha is irrational 1<alpha<2
+
+  vector<int> alpha;
+  alpha_continued_fractions(alpha, a, n);
+  
+  vector<int> p;
+  vector<int> q;
+  p_q_numerations(p, q, alpha, n);
+
+  for(auto p_ : p){
+    cout << p_ << " "; 
+  }
+  cout << endl;
+
+  for(auto q_ : q){
+    cout << q_ << " "; 
+  }
+  cout << endl;
+  
+  map<int, vector<int>> p_system;
+  map<int, vector<int>> q_system;
+
+  p_system_representation(p_system, p, n);
+  q_system_representation(q_system, q, n);
+  
   bool winner = false;
   vector<int> piles;
+  int piles_0,piles_1;
   srand(time(NULL));
-
+  
   cout << "##########   WYTHOFF GAME  ##########" << endl;
   cout << "There is two piles of token : ";
-  piles.push_back(rand()%100);
-  piles.push_back(rand()%100);
-  
+  piles_1 = rand()%100;
+  piles_0 = rand()%piles_1;
+  piles.push_back(piles_0);
+  piles.push_back(piles_1);
+
   cout << "(" << piles.at(0) << ", " << piles.at(1) << ")" << endl; 
   
   //TODO
@@ -77,7 +112,8 @@ int main()
     
     if(piles.at(0) == 0 && piles.at(1) == 0){
       winner = true;
-      cout << "Game over" << endl;
+      cout << "Move " << x << ", " << y << " is wining move!" << endl;
+      break;
     }
 
     cout << "Computer turn ... " << endl;
@@ -101,8 +137,11 @@ int main()
       //try to win
       computer_x = piles.at(0);
       computer_y = piles.at(1);
-      if(isMoveAllow(piles, computer_x, computer_y)){
+      if(isMoveAllow(piles, computer_x, computer_y, a)){
         cout << "Move " << computer_x << ", " << computer_y << " is wining move!" << endl;
+        piles.at(0) -= computer_x;
+        piles.at(1) -= computer_y;
+        cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
         winner = true;
         break;
       }
@@ -119,6 +158,12 @@ int main()
 void reach_P_position(const vector<int>& A,const vector<int>& B, vector<int>& piles, int a)
 {
   cout << "Pokusaj da dosegnes do P pozicije ... " << endl;
+  cout << "A :" << endl;
+  for (auto a : A){
+    cout << a << " ";
+  }
+  cout << endl;
+
   //two case:
   //I  : if piles(0) is B_n, save n, then x = piles(0) and y = A_n,
   //II : if piles(0) is A_n, save n, if y > B_n then y  = B_n
@@ -140,8 +185,10 @@ void reach_P_position(const vector<int>& A,const vector<int>& B, vector<int>& pi
     auto it = find(B.begin(),B.end(), piles.at(0));
     int index = distance(B.begin(), it);
     cout << "Na poziciji " << index << " je " << A.at(index) << endl;
-    piles.insert(piles.end(), piles.at(0));
-    piles.insert(piles.begin(), A.at(index));
+    piles.at(1) = piles.at(0);
+    piles.at(0) = A.at(index);
+//    piles.insert(piles.end(), piles.at(0));
+//    piles.insert(piles.begin(), A.at(index));
   }
   else if(find(A.begin(), A.end(), piles.at(0)) != end(A)){
     cout << "Drugi slucaj x je u A " << endl;
@@ -156,14 +203,16 @@ void reach_P_position(const vector<int>& A,const vector<int>& B, vector<int>& pi
       //computer_move.push_back(piles.at(0));
       //computer_move(B.at(find(index)));
       cout << "Na poziciji " << index << " je " << B.at(index) << endl;
-      piles.insert(piles.end(), B.at(index));
+      piles.at(1) = B.at(index);
     }
     else{
       cout << "Drugi slucaj y je < B " << endl;
-      int d = piles.at(1) - piles.at(0);
+      int d = abs(piles.at(1) - piles.at(0));
       int m = floor(d/a);
-      piles.insert(piles.begin(),A.at(m));
-      piles.insert(piles.end(),B.at(m));
+      piles.at(0) = A.at(m);
+      piles.at(1) = B.at(m);
+      //piles.insert(piles.begin(),A.at(m));
+      //piles.insert(piles.end(),B.at(m));
     }
   }
 
@@ -171,7 +220,10 @@ void reach_P_position(const vector<int>& A,const vector<int>& B, vector<int>& pi
 
 bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<int>& piles)
 {
-  if(find(A.begin(), A.end(), piles.at(0)) != end(A) && find(B.begin(), A.begin(), piles.at(1)) != end(B)) {
+  auto it_A = find(A.begin(), A.end(), piles.at(0));
+  auto it_B = find(B.begin(), B.end(), piles.at(1));
+
+  if(find(A.begin(), A.end(), piles.at(0)) != A.end() && find(B.begin(), B.end(), piles.at(1)) != B.end() && distance(A.begin(), it_A) == distance(B.begin(), it_B)) {
     return true;
   }
   return false;
@@ -180,9 +232,17 @@ bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<in
 
 bool isMoveAllow(vector<int>& piles, int x, int y, int a)
 {
+  if(piles.at(0) > piles.at(1)){
+    return false;
+  }
+
   if(x == 0 && y == 0){
     return false;
   } 
+
+  if(piles.at(0) - x > piles.at(1) - y) {
+    return false;
+  }
 
   if(x > 0 && y > 0 && !(abs(x - y) < a)){
     return false;
@@ -195,9 +255,121 @@ bool isMoveAllow(vector<int>& piles, int x, int y, int a)
   return true;
 }
 
-void calculate_P_Position(vector<int>& A, vector<int>& B, int a, int n)
+void alpha_continued_fractions(vector<int>& alpha, int a, int n)
 {
-  for(int i=1;i<=n;i++){
+  alpha.push_back(1);
+  fill_n(back_inserter(alpha), n, a);
+  //alpha.insert(alpha.end(), n, a);
+
+}
+
+void p_q_numerations(vector<int>& p, vector<int>& q, const vector<int>& alpha, int n)
+{
+  int _p = 1;
+  int _q = 0;
+  
+  //TODO to C++ style, and smarter
+  p.push_back(1);
+  p.push_back(alpha.at(1)*p.at(0)+_p);
+  q.push_back(1);
+  q.push_back(alpha.at(1)*q.at(0)+_q);
+  //ubaci jos n elemenata od 2gog
+  for(int i=2;i<=n;i++){
+    p.push_back(alpha.at(i)*p.at(i-1)+p.at(i-2));
+    q.push_back(alpha.at(i)*q.at(i-1)+q.at(i-2));
+  }
+  
+}
+
+void p_system_representation(map<int, vector<int>>& p_system, const vector<int>& p, int n)
+{
+  int size = 0;
+  for(int i = 1; i <= n; i++){
+    int quotient = 0;
+    int remainder = 0;
+    auto it_p = find(p.begin(), p.end(), i);
+    int index;
+    //if the i is in the p, then initialize the vecor r with size zeors
+    //example: i = 1, 1 is in p[0], r = {0}
+    //         i = 3, 3 is in p[1], r = {0, 0}
+    if(it_p != p.end()){
+      size++;
+      cout << "TEST trenutna velicina r reprezentacije je " << size << endl;
+      index = distance(p.begin(), it_p);
+      cout << "TEST na poziciji " << index << " u p se nalazi " << p.at(index) << endl;
+    }
+    vector<int> r(size,0);
+    quotient = i/p.at(index);
+    remainder = i%p.at(index);
+    r.at(0) = quotient;
+    if(remainder != 0){
+      cout << "Ostatak je " << remainder << endl;
+      cout << "On je predstavljen velicinom " << p_system[remainder].size() << endl;
+      copy_backward(p_system[remainder].begin(), p_system[remainder].end(), r.end()); 
+    }
+
+    cout << "TEST R: " << endl;
+    for(int tmp : r){
+      cout << tmp << " ";
+    }
+    cout<<endl;
+    p_system.insert(pair<int,vector<int>>(i, r));
+  }
+}
+
+void q_system_representation(map<int, vector<int>>& q_system, const vector<int>& q, int n)
+{
+  int size = 0;
+  for(int i = 1; i <= n; i++){
+    int quotient = 0;
+    int remainder = 0;
+    auto it_q = find(q.begin(), q.end(), i);
+    int index;
+    //if the i is in the q, then initialize the vecor r with size zeors
+    //example: i = 1, 1 is in q[0], r = {0}
+    //         i = 3, 3 is in q[1], r = {0, 0}
+    if(it_q != q.end()){
+      size++;
+      cout << "TEST trenutna velicina r reprezentacije je " << size << endl;
+      index = distance(q.begin(), it_q);
+      cout << "TEST na poziciji " << index << " u q se nalazi " << q.at(index) << endl;
+    }
+    vector<int> r(size,0);
+    quotient = i/q.at(index);
+    remainder = i%q.at(index);
+    r.at(0) = quotient;
+    if(remainder != 0){
+      cout << "Ostatak je " << remainder << endl;
+      cout << "On je predstavljen velicinom " << q_system[remainder].size() << endl;
+      copy_backward(q_system[remainder].begin(), q_system[remainder].end(), r.end()); 
+    }
+
+    cout << "TEST R: " << endl;
+    for(int tmp : r){
+      cout << tmp << " ";
+    }
+    cout<<endl;
+    q_system.insert(pair<int,vector<int>>(i, r));
+  }
+}
+void algebraic_characterization_of_P_Position(vector<int>& A, vector<int>& B, int a, int n)
+{
+  double alpha, beta;
+  
+  alpha = (2-a+sqrt(a*a+4))/2;
+  beta = alpha+a;
+
+  //TODO change to C++ for_each
+  for(int i=1;i<n;i++){
+    A.push_back(floor(i*alpha));
+    B.push_back(floor(i*beta));
+  }
+}
+
+void recursive_characterizaton_of_P_Position(vector<int>& A, vector<int>& B, int a, int n)
+{
+  //TODO change to C++ for_each(begin,end,function_to_accumulate)
+  for(int i=1;i<n;i++){
     get_min_positive(A, B);
     B.push_back(A.at(i)+a*i);
   }
