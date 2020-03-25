@@ -12,9 +12,11 @@ using namespace std;
 void recursive_characterizaton_of_P_Position(vector<int>& A, vector<int>& B, int a, int n);
 void algebraic_characterization_of_P_Position(vector<int>& A, vector<int>& B, int a, int n);
 void alpha_continued_fractions(vector<int>& alpha, int a, int n);
+void arithmetic_characterization(const map<int,vector<int>>& p_system, const map<int,vector<int>>& q_system, int n, vector<int>& piles, int a);
 void p_q_numerations(vector<int>& p, vector<int>& q, const vector<int>& alpha, int n);
-void p_system_representation(map<int, vector<int>>& p_system, const vector<int>& p, int n);
-void q_system_representation(map<int, vector<int>>& q_system, const vector<int>& q, int n);
+void p_system_calculation(map<int, vector<int>>& p_system, const vector<int>& p, int n);
+void q_system_calculation(map<int, vector<int>>& q_system, const vector<int>& q, int n);
+int p_interpretation(const map<int,vector<int>>& p_system, vector<int>& R); 
 void get_min_positive(vector<int>& A, const vector<int>& B);
 bool isMoveAllow(vector<int>& piles, int x, int y, int a);
 bool isCurrentStateP(const vector<int>& A, const vector<int>& B, const vector<int>& piles);
@@ -28,7 +30,7 @@ int main()
   //mex{} = 0
   vector<int> A;
   vector<int> B;
-  int n = 17;
+  int n = 100;
   int a = 2;
   
   A.push_back(0);
@@ -74,9 +76,10 @@ int main()
   map<int, vector<int>> p_system;
   map<int, vector<int>> q_system;
 
-  p_system_representation(p_system, p, n);
-  q_system_representation(q_system, q, n);
-  
+  p_system_calculation(p_system, p, n);
+  q_system_calculation(q_system, q, n);
+ 
+
   bool winner = false;
   vector<int> piles;
   int piles_0,piles_1;
@@ -90,6 +93,8 @@ int main()
   piles.push_back(piles_1);
 
   cout << "(" << piles.at(0) << ", " << piles.at(1) << ")" << endl; 
+  
+  arithmetic_characterization(p_system,q_system,n,piles,a);
   
   //TODO
   while(!winner){
@@ -146,7 +151,9 @@ int main()
         break;
       }
       cout << "Nije P pozicija " << endl;
-	    reach_P_position(A,B,piles,a);
+	    
+      arithmetic_characterization(p_system,q_system,n,piles,a);
+      //reach_P_position(A,B,piles,a);
     }
     
     cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
@@ -281,7 +288,7 @@ void p_q_numerations(vector<int>& p, vector<int>& q, const vector<int>& alpha, i
   
 }
 
-void p_system_representation(map<int, vector<int>>& p_system, const vector<int>& p, int n)
+void p_system_calculation(map<int, vector<int>>& p_system, const vector<int>& p, int n)
 {
   int size = 0;
   for(int i = 1; i <= n; i++){
@@ -317,7 +324,7 @@ void p_system_representation(map<int, vector<int>>& p_system, const vector<int>&
   }
 }
 
-void q_system_representation(map<int, vector<int>>& q_system, const vector<int>& q, int n)
+void q_system_calculation(map<int, vector<int>>& q_system, const vector<int>& q, int n)
 {
   int size = 0;
   for(int i = 1; i <= n; i++){
@@ -352,6 +359,96 @@ void q_system_representation(map<int, vector<int>>& q_system, const vector<int>&
     q_system.insert(pair<int,vector<int>>(i, r));
   }
 }
+
+void arithmetic_characterization(const map<int,vector<int>>& p_system, const map<int,vector<int>>& q_system, int n, vector<int>& piles, int a)
+{
+  //R = (dm, dm-1, ... d0)
+  //R' = (dm, ..., d0, 0)
+  //R'' = (dm, ... , d1)
+
+  //FIRST CASE
+  //p-representation(Rp(i)) ends with even num of zeros --> An
+  //Bn = An+ an --> p-representation end with odd num of zeros
+
+  //Rp(Bn) = R'(An) // 
+  //Ip(Rq(i)) = An ---> Rq(i) ends with even num of zeros
+  //Ip(Rq(i)) = An+1 ---> Rq(i) ends with odd num of zeros
+
+  //GAME
+  //curr position (x,y)
+  //1) calculate Rp(x)
+  //  --if it is end with odd num of zeros ---> x = Bk, end win move --> (x,y) = (Ip(Rp''(x)),x)
+  //  --if it is end with even num of zeros ---> x = Ak, 
+  //      * y > Ip(Rp'(x)) ---> (x,y) = (x, Ip(Rp'(x)) win move
+  //      * y = Ip(Rp'(x)) ---> (x,y) is P , can't win from this pos
+  //      * y < Ip(Rp'(x)) ---> m = [(y-x)/a]
+  
+  //FIXME possibly can throw the error if the key is not in map, consider to change to find
+  vector<int> _Rp = p_system.at(piles.at(0));
+  cout << "TEST R representation of "<< piles.at(0) << " is " << endl;  
+  for(int i : _Rp){
+    cout << i << " ";
+  }
+  cout << endl;
+
+  auto index_p = find_if(_Rp.rbegin(), _Rp.rend(), [] (int i) {
+    return (i != 0);
+  });
+
+  int number_of_zeros_p = distance(_Rp.rbegin(), index_p);
+
+  cout << "Broj nula " << number_of_zeros_p << endl;
+
+  if(number_of_zeros_p%2 != 0) {
+    piles.at(1) = piles.at(0);
+    _Rp.pop_back();
+    piles.at(0) = p_interpretation(p_system,_Rp);
+    cout << "Interpretacija " << piles.at(0) << endl;
+  }
+  else {
+    _Rp.push_back(0);
+    if(piles.at(1) > p_interpretation(p_system, _Rp)) {
+      piles.at(1) = p_interpretation(p_system,_Rp);
+    }
+    else if(piles.at(1) == p_interpretation(p_system, _Rp)) {
+      piles.at(0) = rand()%piles.at(0);
+      piles.at(1) = rand()%piles.at(1);
+      //TODO check if move is allowed
+    }
+    else {
+      int d = abs(piles.at(1) - piles.at(0));
+      int m = floor(d/a);
+      vector<int> _Rq = q_system.at(piles.at(m));
+      auto index_q = find_if(_Rq.rbegin(), _Rq.rend(), [] (int i) {
+        return (i != 0);
+      });
+      int number_of_zeros_q = distance(_Rq.rbegin(),index_q);
+      if(number_of_zeros_q%2 != 0){
+        piles.at(1) = p_interpretation(p_system, _Rq) + 1;
+      }
+      else {
+        piles.at(1) = p_interpretation(p_system, _Rq);
+      }
+    }
+  }
+}
+
+int p_interpretation(const map<int,vector<int>>& p_system, vector<int>& R) 
+{
+  cout << "TEST siftovano ";
+
+  for(auto r : R) { 
+    cout << r << " "; 
+  };
+  cout << endl;
+
+  auto it = find_if(p_system.begin(), p_system.end(), [& R] (auto i) {
+    return equal(R.begin(), R.end(), i.second.begin());
+  });
+
+  return it->first;
+}
+
 void algebraic_characterization_of_P_Position(vector<int>& A, vector<int>& B, int a, int n)
 {
   double alpha, beta;
