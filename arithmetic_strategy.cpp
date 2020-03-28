@@ -80,9 +80,8 @@ void q_system_calculation(map<int, vector<int>>& q_system, const vector<unsigned
 int p_interpretation(const map<int,vector<int>>& p_system, vector<int>& R)
 {
   auto it = find_if(p_system.begin(), p_system.end(), [& R] (auto i) {
-    return equal(R.begin(), R.end(), i.second.begin());
+    return R.size() == i.second.size() && equal(R.begin(), R.end(), i.second.begin());
   });
-
   return it->first;
 }
 
@@ -115,16 +114,22 @@ void arithmetic_strategy(const map<int,vector<int>>& p_system, const map<int,vec
   int number_of_zeros_p = distance(_Rp.rbegin(), index_p);
 
   if(number_of_zeros_p%2 != 0) {
+    cout << "Neparan broj nula " << endl;
     piles.at(1) = piles.at(0);
     _Rp.pop_back();
-    piles.at(0) = p_interpretation(p_system,_Rp);
+    int _Ip = p_interpretation(p_system,_Rp);
+    cout << "Ip " << _Ip << endl;
+    piles.at(0) = _Ip;
   }
   else {
+    cout << "Paran broj nula " << endl;
     _Rp.push_back(0);
-    if(piles.at(1) > p_interpretation(p_system, _Rp)) {
-      piles.at(1) = p_interpretation(p_system,_Rp);
+    int _Ip = p_interpretation(p_system,_Rp);
+    cout << "Ip " << _Ip << endl;
+    if(piles.at(1) > _Ip) {
+      piles.at(1) = _Ip;
     }
-    else if(piles.at(1) == p_interpretation(p_system, _Rp)) {
+    else if(piles.at(1) == _Ip) {
       computer_x = rand()%piles.at(0);
 	    computer_y = rand()%piles.at(1);
 
@@ -140,16 +145,24 @@ void arithmetic_strategy(const map<int,vector<int>>& p_system, const map<int,vec
     else {
       int d = abs(piles.at(1) - piles.at(0));
       int m = floor(d/a);
-      vector<int> _Rq = q_system.at(piles.at(m));
+      cout << "TEST R_q reprezentacija od " << m << endl;
+      vector<int> _Rq = q_system.find(m)->second;
+      for_each(_Rq.begin(),_Rq.end(),[](int i) {cout << i << " ";});
+      cout << endl;
       auto index_q = find_if(_Rq.rbegin(), _Rq.rend(), [] (int i) {
         return (i != 0);
       });
       int number_of_zeros_q = distance(_Rq.rbegin(),index_q);
+      cout << "broj nula " << number_of_zeros_q;
+      _Ip = p_interpretation(p_system,_Rq);
+      cout << "Ip je " << endl;
       if(number_of_zeros_q%2 != 0){
-        piles.at(1) = p_interpretation(p_system, _Rq) + 1;
+        piles.at(0) = _Ip - 1;
+        piles.at(1) = _Ip - 1 + m*a;
       }
       else {
-        piles.at(1) = p_interpretation(p_system, _Rq);
+        piles.at(0) = _Ip;
+        piles.at(1) = _Ip + m*a;
       }
     }
   }
