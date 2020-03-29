@@ -1,14 +1,36 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <map>
-#include <iterator>
 #include <set>
+#include <map>
 #include <time.h>
 #include <cmath>
 
 using namespace std;
 
-bool isMoveAllow(vector<int>& piles, int x, int y, int a);
-bool player_move(vector<int>& piles, int a, bool winner);
-bool computer_move(vector<int>& piles, int a, bool winner);
+class Game
+{
+  public:
+    static const int n = 100;
+    Game();
+    ~Game();
+
+    vector<int>& get_piles();
+    virtual void strategy();
+    //Think about to make a class P_positions : Game
+    // void recursive_characterizaton_of_P_Position();
+    // void algebraic_characterization_of_P_Position();
+    // void arithmetic_characterization_of_P_Position();
+
+  private:
+    //void get_min_positive(vector<int>& A, const vector<int>& B);
+
+    vector<int> _piles;
+    int _piles0;
+    int _piles1;
+};
+
+#endif
