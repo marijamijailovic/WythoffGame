@@ -16,6 +16,7 @@ class Recursive : public Recursive_and_Algebraic
     Recursive(int a);
     ~Recursive();
     void p_positions();
+
   private:
     void get_min_positive();
 };

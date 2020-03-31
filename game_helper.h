@@ -12,9 +12,13 @@ class Game_Helper
   public:
     Game_Helper();
     ~Game_Helper();
+    static bool zeros_piles(vector<int>& piles);
+    static void player_move(vector<int>& piles, int a);
+    static void computer_move(vector<int>& piles, int a);
+  private:
+    static bool try_to_win(vector<int>& piles, int a);
     static bool isMoveAllow(vector<int>& piles, int a, int x, int y);
-    static bool player_move(vector<int>& piles, int a, bool winner);
-    static bool computer_move(vector<int>& piles, int a, bool winner);
+ 
 };
 
 #endif

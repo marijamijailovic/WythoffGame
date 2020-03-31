@@ -7,7 +7,6 @@ Arithmetic::~Arithmetic() {}
 
 void Arithmetic::strategy()
 {
-  cout << "Arithmetic strategy" << endl;
   arithmetic_characterization_of_P_Position();
   arithmetic_game(get_piles());
 }
@@ -30,12 +29,10 @@ void Arithmetic::p_q_numerations()
 {
   int __p = 1;
   int __q = 0;
-  //TODO to C++ style, and smarter
   _p.push_back(1);
   _p.push_back(_alpha.at(1)*_p.at(0)+__p);
   _q.push_back(1);
   _q.push_back(_alpha.at(1)*_q.at(0)+__q);
-  //ubaci jos n elemenata od 2gog
   for(int i=2;i<=n;i++){
     _p.push_back(_alpha.at(i)*_p.at(i-1)+_p.at(i-2));
     _q.push_back(_alpha.at(i)*_q.at(i-1)+_q.at(i-2));
@@ -106,82 +103,77 @@ void Arithmetic::arithmetic_game(vector<int>& piles)
 {
   cout << "There is two piles of token : ";
   cout << "(" << piles.at(0) << ", " << piles.at(1) << ")" << endl;
-  bool winner = false;
-  while(!winner){
-    if(Game_Helper::player_move(piles,_a,winner)){
+  while(!Game_Helper::zeros_piles(piles)){
+    cout << "Player turn ... " << endl;
+    Game_Helper::player_move(piles,_a);
+    if(Game_Helper::zeros_piles(piles)){
       break;
     }
-    if(Game_Helper::computer_move(piles,_a,winner)){
-      break;
+    cout << "Computer turn ... " << endl; 
+    if(piles.at(0) == 0 and piles.at(1) !=0) {
+      Game_Helper::computer_move(piles,_a);
+      if(Game_Helper::zeros_piles(piles)){
+        break;
+      }
     }
-    arithmetic_strategy(piles,winner);
+    arithmetic_strategy(piles);
     cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
   }
 }
 
-void Arithmetic::arithmetic_strategy(vector<int>& piles, bool winner)
+void Arithmetic::arithmetic_strategy(vector<int>& piles)
 {
-  int computer_x, computer_y;
-
-  vector<int> _Rp = _p_system.find(piles.at(0))->second;
-  auto index_p = find_if(_Rp.rbegin(), _Rp.rend(), [] (int i) {
-    return (i != 0);
-  });
-
-  int number_of_zeros_p = distance(_Rp.rbegin(), index_p);
+  vector<int> _Rp = _p_system.find(piles.at(0))->second;  
+  int number_of_zeros_p = number_of_zeros_from_end(_Rp);
 
   if(number_of_zeros_p%2 != 0) {
-    cout << "Neparan broj nula " << endl;
-    piles.at(1) = piles.at(0);
-    _Rp.pop_back();
-    int _Ip = p_interpretation(_Rp);
-    cout << "Ip " << _Ip << endl;
-    piles.at(0) = _Ip;
+    odd_number_of_zeros(piles,_Rp);
   }
   else {
-    cout << "Paran broj nula " << endl;
-    _Rp.push_back(0);
-    int _Ip = p_interpretation(_Rp);
-    cout << "Ip " << _Ip << endl;
-    if(piles.at(1) > _Ip) {
-      piles.at(1) = _Ip;
-    }
-    else if(piles.at(1) == _Ip) {
-      computer_x = rand()%piles.at(0);
-	    computer_y = rand()%piles.at(1);
-
-      while(!Game_Helper::isMoveAllow(piles,_a,computer_x,computer_y)){
-        cout << "Move " << computer_x << ", " << computer_y << " is invalid, please try again!" << endl;
-        computer_x = rand()%piles.at(0);
-	      computer_y = rand()%piles.at(1);
-      }
-
-      piles.at(0) -= computer_x;
-      piles.at(1) -= computer_y;
-    }
-    else {
-      int d = abs(piles.at(1) - piles.at(0));
-      int m = floor(d/_a);
-      cout << "TEST R_q reprezentacija od " << m << endl;
-      vector<int> _Rq = _q_system.find(m)->second;
-      for_each(_Rq.begin(),_Rq.end(),[](int i) {cout << i << " ";});
-      cout << endl;
-      auto index_q = find_if(_Rq.rbegin(), _Rq.rend(), [] (int i) {
-        return (i != 0);
-      });
-      int number_of_zeros_q = distance(_Rq.rbegin(),index_q);
-      cout << "broj nula " << number_of_zeros_q;
-      _Ip = p_interpretation(_Rq);
-      cout << "Ip je " << endl;
-      if(number_of_zeros_q%2 != 0){
-        piles.at(0) = _Ip - 1;
-        piles.at(1) = _Ip - 1 + m*_a;
-      }
-      else {
-        piles.at(0) = _Ip;
-        piles.at(1) = _Ip + m*_a;
-      }
-    }
+    even_number_of_zeros(piles,_Rp);
   }
 }
 
+int Arithmetic::number_of_zeros_from_end(vector<int>& R)
+{
+  auto index = find_if(R.rbegin(), R.rend(), [] (int i) {
+    return (i != 0);
+  });
+
+  return distance(R.rbegin(), index);
+}
+
+void Arithmetic::odd_number_of_zeros(vector<int>& piles, vector<int>& R)
+{
+  piles.at(1) = piles.at(0);
+  R.pop_back();
+  int _Ip = p_interpretation(R);
+  piles.at(0) = _Ip;
+}
+
+void Arithmetic::even_number_of_zeros(vector<int>& piles, vector<int>& R)
+{
+  R.push_back(0);
+  int _Ip = p_interpretation(R);
+  if(piles.at(1) > _Ip) {
+    piles.at(1) = _Ip;
+  }
+  else if(piles.at(1) < _Ip) {
+    int d = abs(piles.at(1) - piles.at(0));
+    int m = floor(d/_a);
+    vector<int> _Rq = _q_system.find(m)->second;
+    int number_of_zeros_q = number_of_zeros_from_end(_Rq);
+    _Ip = p_interpretation(_Rq);
+    if(number_of_zeros_q%2 != 0){
+      piles.at(0) = _Ip - 1;
+      piles.at(1) = _Ip - 1 + m*_a;
+    }
+    else {
+      piles.at(0) = _Ip;
+      piles.at(1) = _Ip + m*_a;
+    }
+  }
+  else {
+    Game_Helper::computer_move(piles,_a);
+  }
+}

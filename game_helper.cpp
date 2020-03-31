@@ -24,9 +24,13 @@ bool Game_Helper::isMoveAllow(vector<int>& piles, int a, int x, int y)
   return true;
 }
 
-bool Game_Helper::player_move(vector<int>& piles, int a, bool winner)
+bool Game_Helper::zeros_piles(vector<int>& piles)
 {
-  cout << "Player turn ... " << endl;
+  return (piles.at(0) == 0 && piles.at(1) == 0);
+}
+
+void Game_Helper::player_move(vector<int>& piles, int a)
+{
   cout << "How many piles do you want to remove?" << endl;
   int x, y;
   cin >> x;
@@ -41,24 +45,35 @@ bool Game_Helper::player_move(vector<int>& piles, int a, bool winner)
   piles.at(1) -= y;
 
   cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
-
-  if(piles.at(0) == 0 && piles.at(1) == 0){
-    winner = true;
-  }
-  return winner;
 }
 
-bool Game_Helper::computer_move(vector<int>& piles, int a, bool winner)
+void Game_Helper::computer_move(vector<int>& piles, int a)
 {
-  cout << "Computer turn ... " << endl;
+  if(!try_to_win(piles,a)) {
+    int computer_x = rand()%piles.at(0);
+    int computer_y = rand()%piles.at(1);
+
+    while(!isMoveAllow(piles,a,computer_x,computer_y)){
+      cout << "Move " << computer_x << ", " << computer_y << " is invalid, please try again!" << endl;
+      computer_x = rand()%piles.at(0);
+      computer_y = rand()%piles.at(1);
+    }
+
+    piles.at(0) -= computer_x;
+    piles.at(1) -= computer_y;
+  }
+  cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
+}
+
+bool Game_Helper::try_to_win(vector<int>& piles, int a)
+{
   //try to win first
   int computer_x = piles.at(0);
   int computer_y = piles.at(1);
   if(isMoveAllow(piles,a,computer_x,computer_y)){
     piles.at(0) -= computer_x;
     piles.at(1) -= computer_y;
-    cout << "Current state od piles is ("<< piles.at(0) << ", " << piles.at(1) << ")" << endl;
-    winner = true;
+    return true;
   }
-  return winner;
+  return false;
 }

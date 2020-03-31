@@ -1,0 +1,43 @@
+main.cpp
+  - meni igrice, biramo strategiju po kojoj ce se kreirati P tabela
+
+game.cpp
+  - inicijalizuje pocetne pozicije igre
+
+game_helper.cpp
+  - pomocna klasa gde su definisani dozvoljeni potezi,
+  - potez igraca,
+  - potez kompjutera
+
+recursive_and_algebraic.cpp
+  - strategija igre prema rekurzivnoj i algebarskoj strategji
+  - (piles_0, piles_1) su trenutne pozicije
+  - Slucaj 1 : piles_0 = B_n ==> piles_1 = A_n
+  - Slucaj 2 : piles_0 = A_n ==> piles_1 > B_n ==> piles_1 = B_n
+                                 piles_1 < B_n ==> d = piles_1-piles_0
+                                                   m = floor(d/a)
+                                                   piles_0 = A_m
+                                                   piles_1 = B_m
+
+recursive.cpp
+  - kreiranje P tabele prema rekurzivnoj strategiji
+
+algebraic.cpp
+  - kreiranje P tabele prema algebarskoj strategiji
+
+arithmetic.cpp
+  - strategija igre prema aritmetickoj stragegji
+  - R = (dm, dm-1, ... d0)
+    R' = (dm, ..., d0, 0)
+    R'' = (dm, ... , d1)
+
+  - Slucaj 1 : (Rp(piles_0) zavrsava sa neparnim brojem nula ==> piles_1 = piles_0
+                                                                 piles_0 = Ip(Rp(piles_0))
+               (Rp(piles_0) zavrsava sa parnim brojem nula ==> piles_1 > Ip ==> piles_1 = Ip
+                                                               piles_1 < Ip ==> d = piles_1-piles_0
+                                                                                m = floor(d/a)
+                                                                                Rq(m) zavrsava sa neparnim brojem nula ==> piles_0 = Ip(Rq(m))-1
+                                                                                                                           piles_1 = Ip(Rq(m))-1+m*a
+
+                                                                                Rq(m) zavrsava sa parnim brojem nula ==> piles_0 = Ip(Rq(m))
+                                                                                                                         piles_1 = Ip(Rq(m))+m*a

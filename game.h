@@ -17,17 +17,10 @@ class Game
     static const int n = 100;
     Game();
     ~Game();
-
     vector<int>& get_piles();
-    virtual void strategy();
-    //Think about to make a class P_positions : Game
-    // void recursive_characterizaton_of_P_Position();
-    // void algebraic_characterization_of_P_Position();
-    // void arithmetic_characterization_of_P_Position();
+    virtual void strategy() = 0;
 
   private:
-    //void get_min_positive(vector<int>& A, const vector<int>& B);
-
     vector<int> _piles;
     int _piles0;
     int _piles1;
