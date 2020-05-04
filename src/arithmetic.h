@@ -17,9 +17,8 @@ class Arithmetic : public Game
     Arithmetic(int a);
     ~Arithmetic();
     void strategy();
-
-  private:
     void arithmetic_characterization_of_P_Position();
+  private:
     void alpha_continued_fractions();
     void p_q_numerations();
     void p_system_calculation();
@@ -30,7 +29,7 @@ class Arithmetic : public Game
     void odd_number_of_zeros(vector<int>& piles, vector<int>& R);
     void even_number_of_zeros(vector<int>& piles, vector<int>& R);
     int number_of_zeros_from_end(vector<int>& R);
-    
+
     int _a;
     vector<int> _alpha;
     vector<unsigned long long int> _p;

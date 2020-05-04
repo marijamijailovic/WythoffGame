@@ -7,8 +7,9 @@ OBJ = main.o	\
 	arithmetic.o	\
 	recursive_and_algebraic.o	\
 	recursive.o	\
-	algebraic.o
-		
+	algebraic.o \
+	measure_time.o
+
 %.o: %.cpp
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 

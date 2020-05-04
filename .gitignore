@@ -1,4 +1,7 @@
-##tex files:
+src/WythoffGame
+
+*.o
+*~
 
 *.aux
 *.log
