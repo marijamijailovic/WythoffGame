@@ -1,6 +1,6 @@
 PROGRAM = WythoffGame
 CXX = g++
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -Wextra -Wshadow -Wold-style-cast -Wcast-align -Wunused -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Werror -Wfatal-errors  -g
 OBJ = main.o	\
 	game.o	\
 	game_helper.o	\

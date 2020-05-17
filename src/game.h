@@ -14,11 +14,13 @@ using namespace std;
 class Game
 {
   public:
-    static const int n = 100;
-    Game();
+    Game(int n);
     ~Game();
     vector<int>& get_piles();
     virtual void strategy() = 0;
+
+  protected:
+    int _n;
 
   private:
     vector<int> _piles;

@@ -1,6 +1,6 @@
 #include "recursive.h"
 
-Recursive::Recursive(int a) : Recursive_and_Algebraic(a) {}
+Recursive::Recursive(int n, int a) : Recursive_and_Algebraic(n, a) {}
 
 Recursive::~Recursive() {}
 
@@ -8,27 +8,25 @@ void Recursive::p_positions()
 {
   _A.push_back(0);
   _B.push_back(0);
+  _map[0] = 0;
 
-  for(int i=1;i<n;i++){
-    get_min_positive();
-    _B.push_back(_A.at(i)+_a*i);
+  for(int i=1;i<_n;i++){
+    int mex = get_min_positive();
+    _A.push_back(mex);
+    int k = _A.at(vector<int>::size_type(i))+_a*i;
+    _B.push_back(k);
+    _map[mex] = mex;
+    _map[k] = k;
   }
 }
 
-void Recursive::get_min_positive()
+int Recursive::get_min_positive()
 {
-  //merge A and B in sort order and find the missing pos number
-  set<int> C;
-
-  C.insert(_A.begin(),_A.end());
-  C.insert(_B.begin(),_B.end());
-
-  int mex = 0;
-  for(auto c : C){
-    if(c != mex){
-      break;
+  vector<int>::size_type index = 1;
+  while(1){
+    if(_map.find(static_cast<int>(index)) == _map.end()){
+      return static_cast<int>(index);
     }
-    mex++;
+    index++;
   }
-  _A.push_back(mex);
 }

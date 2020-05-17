@@ -14,7 +14,7 @@ using namespace std;
 class Recursive_and_Algebraic : public Game
 {
   public:
-    Recursive_and_Algebraic(int a);
+    Recursive_and_Algebraic(int n, int a);
     ~Recursive_and_Algebraic();
     void strategy();
     virtual void p_positions() = 0;

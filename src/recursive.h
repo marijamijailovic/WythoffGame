@@ -13,12 +13,13 @@ using namespace std;
 class Recursive : public Recursive_and_Algebraic
 {
   public:
-    Recursive(int a);
+    Recursive(int n, int a);
     ~Recursive();
     void p_positions();
 
   private:
-    void get_min_positive();
+    map<int,int> _map;
+    int get_min_positive();
 };
 
 #endif

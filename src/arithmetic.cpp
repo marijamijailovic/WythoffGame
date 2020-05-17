@@ -1,7 +1,7 @@
 #include "arithmetic.h"
 #include "game_helper.h"
 
-Arithmetic::Arithmetic(int a) : _a(a) {}
+Arithmetic::Arithmetic(int n, int a) : Game(n), _a(a) {}
 
 Arithmetic::~Arithmetic() {}
 
@@ -22,7 +22,7 @@ void Arithmetic::arithmetic_characterization_of_P_Position()
 void Arithmetic::alpha_continued_fractions()
 {
   _alpha.push_back(1);
-  fill_n(back_inserter(_alpha), n, _a);
+  fill_n(back_inserter(_alpha), _n, _a);
 }
 
 void Arithmetic::p_q_numerations()
@@ -33,26 +33,30 @@ void Arithmetic::p_q_numerations()
   _p.push_back(_alpha.at(1)*_p.at(0)+__p);
   _q.push_back(1);
   _q.push_back(_alpha.at(1)*_q.at(0)+__q);
-  for(int i=2;i<=n;i++){
-    _p.push_back(_alpha.at(i)*_p.at(i-1)+_p.at(i-2));
+  vector<int>::size_type i=2;
+  int memoize = _alpha.at(2)*_p.at(1)+_p.at(0);
+  while(memoize <= _n ) {
+    memoize = _alpha.at(i)*_p.at(i-1)+_p.at(i-2);
+    _p.push_back(memoize);
     _q.push_back(_alpha.at(i)*_q.at(i-1)+_q.at(i-2));
+    i++;
   }
 }
 
 void Arithmetic::p_system_calculation()
 {
-  int size = 0;
-  for(int i = 1; i <= n; i++){
+  vector<int>::size_type size = 0;
+  for(int i = 1; i <= _n; i++){
     int quotient = 0;
     int remainder = 0;
     auto it_p = find(_p.begin(), _p.end(), i);
-    int index;
+    std::vector<int>::size_type index;
     //if the i is in the p, then initialize the vecor r with size zeors
     //example: i = 1, 1 is in p[0], r = {0}
     //         i = 3, 3 is in p[1], r = {0, 0}
     if(it_p != _p.end()){
       size++;
-      index = distance(_p.begin(), it_p);
+      index = static_cast<vector<int>::size_type>(distance(_p.begin(), it_p));
     }
     vector<int> r(size,0);
     quotient = i/_p.at(index);
@@ -67,18 +71,18 @@ void Arithmetic::p_system_calculation()
 
 void Arithmetic::q_system_calculation()
 {
-  int size = 0;
-  for(int i = 1; i <= n; i++){
+  vector<int>::size_type size = 0;
+  for(int i = 1; i <= _n; i++){
     int quotient = 0;
     int remainder = 0;
     auto it_q = find(_q.begin(), _q.end(), i);
-    int index;
+    std::vector<int>::size_type index;
     //if the i is in the q, then initialize the vecor r with size zeors
     //example: i = 1, 1 is in q[0], r = {0}
     //         i = 3, 3 is in q[1], r = {0, 0}
     if(it_q != _q.end()){
       size++;
-      index = distance(_q.begin(), it_q);
+      index = static_cast<vector<int>::size_type>(distance(_q.begin(), it_q));
     }
     vector<int> r(size,0);
     quotient = i/_q.at(index);
@@ -109,7 +113,7 @@ void Arithmetic::arithmetic_game(vector<int>& piles)
     if(Game_Helper::zeros_piles(piles)){
       break;
     }
-    cout << "Computer turn ... " << endl; 
+    cout << "Computer turn ... " << endl;
     if(piles.at(0) == 0 and piles.at(1) !=0) {
       Game_Helper::computer_move(piles,_a);
       if(Game_Helper::zeros_piles(piles)){
@@ -123,8 +127,8 @@ void Arithmetic::arithmetic_game(vector<int>& piles)
 
 void Arithmetic::arithmetic_strategy(vector<int>& piles)
 {
-  vector<int> _Rp = _p_system.find(piles.at(0))->second;  
-  int number_of_zeros_p = number_of_zeros_from_end(_Rp);
+  vector<int> _Rp = _p_system.find(piles.at(0))->second;
+  int number_of_zeros_p = static_cast<int>(number_of_zeros_from_end(_Rp));
 
   if(number_of_zeros_p%2 != 0) {
     odd_number_of_zeros(piles,_Rp);
@@ -134,13 +138,13 @@ void Arithmetic::arithmetic_strategy(vector<int>& piles)
   }
 }
 
-int Arithmetic::number_of_zeros_from_end(vector<int>& R)
+vector<int>::size_type Arithmetic::number_of_zeros_from_end(vector<int>& R)
 {
   auto index = find_if(R.rbegin(), R.rend(), [] (int i) {
     return (i != 0);
   });
 
-  return distance(R.rbegin(), index);
+  return static_cast<vector<int>::size_type>(distance(R.rbegin(), index));
 }
 
 void Arithmetic::odd_number_of_zeros(vector<int>& piles, vector<int>& R)
@@ -159,10 +163,10 @@ void Arithmetic::even_number_of_zeros(vector<int>& piles, vector<int>& R)
     piles.at(1) = _Ip;
   }
   else if(piles.at(1) < _Ip) {
-    int d = abs(piles.at(1) - piles.at(0));
-    int m = floor(d/_a);
+    double d = abs(piles.at(1) - piles.at(0));
+    int m = static_cast<int>(floor(d/_a));
     vector<int> _Rq = _q_system.find(m)->second;
-    int number_of_zeros_q = number_of_zeros_from_end(_Rq);
+    int number_of_zeros_q = static_cast<int>(number_of_zeros_from_end(_Rq));
     _Ip = p_interpretation(_Rq);
     if(number_of_zeros_q%2 != 0){
       piles.at(0) = _Ip - 1;

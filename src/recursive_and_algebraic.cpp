@@ -1,7 +1,7 @@
 #include "recursive_and_algebraic.h"
 #include "game_helper.h"
 
-Recursive_and_Algebraic::Recursive_and_Algebraic(int a) : _a(a) {}
+Recursive_and_Algebraic::Recursive_and_Algebraic(int n, int a) : Game(n), _a(a) {}
 
 Recursive_and_Algebraic::~Recursive_and_Algebraic() {}
 
@@ -35,19 +35,19 @@ void Recursive_and_Algebraic::reach_P_position(vector<int>& piles)
   //                                 if y < B_n, d = y -x, m = donji_ceo(d/a) then x = A_m, y = B_m, m < n
   if(find(_B.begin(), _B.end(), piles.at(0)) != end(_B)) {
     auto it = find(_B.begin(),_B.end(), piles.at(0));
-    int index = distance(_B.begin(), it);
+    vector<int>::size_type index = static_cast<vector<int>::size_type>(distance(_B.begin(), it));
     piles.at(1) = piles.at(0);
     piles.at(0) = _A.at(index);
   }
   else if(find(_A.begin(), _A.end(), piles.at(0)) != end(_A)) {
     auto it = find(_A.begin(),_A.end(), piles.at(0));
-    int index = distance(_A.begin(), it);
+    vector<int>::size_type index = static_cast<vector<int>::size_type>(distance(_A.begin(), it));
     if(piles.at(1) > _B.at(index)) {
       piles.at(1) = _B.at(index);
     }
     else if(piles.at(1) < _B.at(index)) {
-      int d = abs(piles.at(1) - piles.at(0));
-      int m = floor(d/_a);
+      double d = abs(piles.at(1) - piles.at(0));
+      vector<int>::size_type m = static_cast<vector<int>::size_type>(floor(d/_a));
       piles.at(0) = _A.at(m);
       piles.at(1) = _B.at(m);
     }

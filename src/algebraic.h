@@ -10,7 +10,7 @@ using namespace std;
 class Algebraic : public Recursive_and_Algebraic
 {
   public:
-    Algebraic(int a);
+    Algebraic(int n, int a);
     ~Algebraic();
     void p_positions();
 };
