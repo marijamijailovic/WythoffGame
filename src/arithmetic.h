@@ -28,13 +28,13 @@ class Arithmetic : public Game
     void arithmetic_strategy(vector<int>& piles);
     void odd_number_of_zeros(vector<int>& piles, vector<int>& R);
     void even_number_of_zeros(vector<int>& piles, vector<int>& R);
-    vector<int>::size_type number_of_zeros_from_end(vector<int>& R);
+    int number_of_zeros_from_end(vector<int>& R);
 
     int _a;
     vector<int> _alpha;
     vector<int> _p;
     vector<int> _q;
-    map<int,vector<int>> _p_system;
+    map<int, vector<int>> _p_system;
     map<int, vector<int>> _q_system;
 };
 

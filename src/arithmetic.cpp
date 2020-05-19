@@ -33,13 +33,13 @@ void Arithmetic::p_q_numerations()
   _p.push_back(_alpha.at(1)*_p.at(0)+__p);
   _q.push_back(1);
   _q.push_back(_alpha.at(1)*_q.at(0)+__q);
-  vector<int>::size_type i=2;
+  vector<int>::size_type index=2;
   int memoize = _alpha.at(2)*_p.at(1)+_p.at(0);
-  while(memoize <= _n ) {
-    memoize = _alpha.at(i)*_p.at(i-1)+_p.at(i-2);
+  while(memoize <= _n) {
+    memoize = _alpha.at(index)*_p.at(index-1)+_p.at(index-2);
     _p.push_back(memoize);
-    _q.push_back(_alpha.at(i)*_q.at(i-1)+_q.at(i-2));
-    i++;
+    _q.push_back(_alpha.at(index)*_q.at(index-1)+_q.at(index-2));
+    index++;
   }
 }
 
@@ -76,7 +76,7 @@ void Arithmetic::q_system_calculation()
     int quotient = 0;
     int remainder = 0;
     auto it_q = find(_q.begin(), _q.end(), i);
-    std::vector<int>::size_type index;
+    vector<int>::size_type index;
     //if the i is in the q, then initialize the vecor r with size zeors
     //example: i = 1, 1 is in q[0], r = {0}
     //         i = 3, 3 is in q[1], r = {0, 0}
@@ -128,9 +128,9 @@ void Arithmetic::arithmetic_game(vector<int>& piles)
 void Arithmetic::arithmetic_strategy(vector<int>& piles)
 {
   vector<int> _Rp = _p_system.find(piles.at(0))->second;
-  int number_of_zeros_p = static_cast<int>(number_of_zeros_from_end(_Rp));
+  int number_of_zeros_p = number_of_zeros_from_end(_Rp);
 
-  if(number_of_zeros_p%2 != 0) {
+  if(fmod(number_of_zeros_p,2) != 0) {
     odd_number_of_zeros(piles,_Rp);
   }
   else {
@@ -138,13 +138,15 @@ void Arithmetic::arithmetic_strategy(vector<int>& piles)
   }
 }
 
-vector<int>::size_type Arithmetic::number_of_zeros_from_end(vector<int>& R)
+int Arithmetic::number_of_zeros_from_end(vector<int>& R)
 {
-  auto index = find_if(R.rbegin(), R.rend(), [] (int i) {
+  vector<int>::reverse_iterator index = find_if(R.rbegin(), R.rend(), [] (int i) {
     return (i != 0);
   });
-
-  return static_cast<vector<int>::size_type>(distance(R.rbegin(), index));
+  
+  int result = static_cast<int>(distance(R.rbegin(), index));
+  
+  return result;
 }
 
 void Arithmetic::odd_number_of_zeros(vector<int>& piles, vector<int>& R)
@@ -163,12 +165,12 @@ void Arithmetic::even_number_of_zeros(vector<int>& piles, vector<int>& R)
     piles.at(1) = _Ip;
   }
   else if(piles.at(1) < _Ip) {
-    double d = abs(piles.at(1) - piles.at(0));
+    int d = abs(piles.at(1) - piles.at(0));
     int m = static_cast<int>(floor(d/_a));
     vector<int> _Rq = _q_system.find(m)->second;
-    int number_of_zeros_q = static_cast<int>(number_of_zeros_from_end(_Rq));
+    int number_of_zeros_q = number_of_zeros_from_end(_Rq);
     _Ip = p_interpretation(_Rq);
-    if(number_of_zeros_q%2 != 0){
+    if(fmod(number_of_zeros_q, 2) != 0){
       piles.at(0) = _Ip - 1;
       piles.at(1) = _Ip - 1 + m*_a;
     }

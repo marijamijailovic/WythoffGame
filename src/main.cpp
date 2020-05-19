@@ -14,13 +14,20 @@ int main()
   int game_option;
   int a;
 
-  cout << "Do you want to measure the time of calculation the p-position by the strategies?(y/n)" << endl;
-  char time;
-  cin >> time;
-  if(time == 'y'){
-    MeasureTime::calculate_time();
+  cout << "Do you want to measure the time of calculation?(y/n)" << endl;
+  char option;
+  cin >> option;
+  if(option == 'y'){
+    cout << "To calculate the time for the p_position enter A, to calculate biggest pair of piles enter B" << endl;
+    cin >> option;
+    if(option == 'A') { 
+      MeasureTime::calculate_time();
+    }
+    else if(option == 'B') {
+      MeasureTime::caluculate_piles();
+    }
   }
-
+  
   cout << "##########   WYTHOFF GAME  ##########" << endl;
   cout << "There three way how we can calculate P-Position table (please choose the one of the option)" << endl;
   cout << "1) Recursive characterization of the P-Positions" << endl;

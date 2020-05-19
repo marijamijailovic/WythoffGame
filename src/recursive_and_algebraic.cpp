@@ -46,7 +46,7 @@ void Recursive_and_Algebraic::reach_P_position(vector<int>& piles)
       piles.at(1) = _B.at(index);
     }
     else if(piles.at(1) < _B.at(index)) {
-      double d = abs(piles.at(1) - piles.at(0));
+      int d = abs(piles.at(1) - piles.at(0));
       vector<int>::size_type m = static_cast<vector<int>::size_type>(floor(d/_a));
       piles.at(0) = _A.at(m);
       piles.at(1) = _B.at(m);
