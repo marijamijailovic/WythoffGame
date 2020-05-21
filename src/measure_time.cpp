@@ -18,15 +18,15 @@ class MeasureTime
       //Algebraic strategy
       ofstream piles_statistics;
       piles_statistics.rdbuf()->pubsetbuf(0,0);
-      piles_statistics.open("piles_statistics_v2.csv",ios::app);
+      piles_statistics.open("./statistics/piles.csv",ios::app);
       for(long double i=0,k=10;i<100;i++,k*=2){  
         vector<long double> piles;
-        cout << i << " : " << k << endl;
+        //cout << i << " : " << k << endl;
         piles_statistics << k << ",";
-        auto start = high_resolution_clock::now();
+        //auto start = high_resolution_clock::now();
         biggest_piles_algebraic_method(k, 2, piles);
-        auto stop = high_resolution_clock::now();
-        piles_statistics << duration<double, std::milli>(stop - start).count() << ",";
+        //auto stop = high_resolution_clock::now();
+        //piles_statistics << duration<double, std::milli>(stop - start).count() << ",";
         piles_statistics << piles.at(0) << "," << piles.at(1);
         piles_statistics << "\n";
       }
