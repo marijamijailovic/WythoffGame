@@ -18,16 +18,21 @@ int main()
   char option;
   cin >> option;
   if(option == 'y'){
-    cout << "To calculate the time for the p_position enter A, to calculate biggest pair of piles enter B" << endl;
+    cout << "To calculate the time for the p_position depeneds by n enter A, " << endl;
+    cout << "To calculate time for the p_position depends by a enter B, " << endl;
+    cout << "To calculate biggest pair of piles enter C" << endl;
     cin >> option;
-    if(option == 'A') { 
-      MeasureTime::calculate_time();
+    if('A' == option) {
+      MeasureTime::calculate_time_n();
     }
-    else if(option == 'B') {
+    else if('B' == option) {
+      MeasureTime::calculate_time_a();
+    }
+    else if('C' == option) {
       MeasureTime::caluculate_piles();
     }
   }
-  
+
   cout << "##########   WYTHOFF GAME  ##########" << endl;
   cout << "There three way how we can calculate P-Position table (please choose the one of the option)" << endl;
   cout << "1) Recursive characterization of the P-Positions" << endl;
@@ -46,7 +51,7 @@ int main()
   } else if(game_option == 3){
     cout << "Please input a, a can be any positive integer " << endl;
     cin >> a;
-    Arithmetic game(100, a);
+    Arithmetic game(17, a);
     game.strategy();
   }
 

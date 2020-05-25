@@ -18,7 +18,8 @@ class Recursive : public Recursive_and_Algebraic
     void p_positions();
 
   private:
-    map<int, int> _map;
+    vector<int> _C;
+    //map<int, int> _map;
     int get_min_positive();
 };
 

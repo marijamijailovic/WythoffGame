@@ -46,21 +46,20 @@ void Arithmetic::p_q_numerations()
 void Arithmetic::p_system_calculation()
 {
   vector<int>::size_type size = 0;
+  int index;
   for(int i = 1; i <= _n; i++){
     int quotient = 0;
     int remainder = 0;
-    auto it_p = find(_p.begin(), _p.end(), i);
-    std::vector<int>::size_type index;
     //if the i is in the p, then initialize the vecor r with size zeors
     //example: i = 1, 1 is in p[0], r = {0}
     //         i = 3, 3 is in p[1], r = {0, 0}
-    if(it_p != _p.end()){
+    if(binary_search(_p.begin(), _p.end(), i)){
       size++;
-      index = static_cast<vector<int>::size_type>(distance(_p.begin(), it_p));
+      index = i;
     }
     vector<int> r(size,0);
-    quotient = i/_p.at(index);
-    remainder = i%_p.at(index);
+    quotient = i/index;
+    remainder = i%index;
     r.at(0) = quotient;
     if(remainder != 0){
       copy_backward(_p_system[remainder].begin(), _p_system[remainder].end(), r.end());
@@ -72,21 +71,20 @@ void Arithmetic::p_system_calculation()
 void Arithmetic::q_system_calculation()
 {
   vector<int>::size_type size = 0;
+  int index;
   for(int i = 1; i <= _n; i++){
     int quotient = 0;
     int remainder = 0;
-    auto it_q = find(_q.begin(), _q.end(), i);
-    vector<int>::size_type index;
     //if the i is in the q, then initialize the vecor r with size zeors
     //example: i = 1, 1 is in q[0], r = {0}
     //         i = 3, 3 is in q[1], r = {0, 0}
-    if(it_q != _q.end()){
+    if(binary_search(_q.begin(), _q.end(), i)){
       size++;
-      index = static_cast<vector<int>::size_type>(distance(_q.begin(), it_q));
+      index = i;
     }
     vector<int> r(size,0);
-    quotient = i/_q.at(index);
-    remainder = i%_q.at(index);
+    quotient = i/index;
+    remainder = i%index;
     r.at(0) = quotient;
     if(remainder != 0){
       copy_backward(_q_system[remainder].begin(), _q_system[remainder].end(), r.end());
@@ -143,9 +141,9 @@ int Arithmetic::number_of_zeros_from_end(vector<int>& R)
   vector<int>::reverse_iterator index = find_if(R.rbegin(), R.rend(), [] (int i) {
     return (i != 0);
   });
-  
+
   int result = static_cast<int>(distance(R.rbegin(), index));
-  
+
   return result;
 }
 

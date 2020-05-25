@@ -17,7 +17,7 @@ void Algebraic::p_positions()
   _A.push_back(0);
   _B.push_back(0);
 
-  for(int i=1;i<_n;i++){
+  for(int i=1;i<=_n;i++){
     _A.push_back(static_cast<int>(floor(alpha*i)));
     _B.push_back(static_cast<int>(floor(beta*i)));
   }
