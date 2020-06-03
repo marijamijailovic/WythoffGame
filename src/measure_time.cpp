@@ -5,6 +5,8 @@
 #include <functional>
 #include <fstream>
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 #include "arithmetic.h"
 #include "recursive.h"
 #include "algebraic.h"
@@ -18,16 +20,21 @@ class MeasureTime
       //Algebraic strategy
       ofstream piles_statistics;
       piles_statistics.rdbuf()->pubsetbuf(0,0);
-      piles_statistics.open("./statistics/caluculate_piles.csv",ios::app);
+      piles_statistics.open("./statistics/csv/calculate_piles.csv",ios::app);
       for(long double i=0,k=10;i<100;i++,k*=2){
         vector<long double> piles;
-        piles_statistics << k << ",";
+        stringstream sk;
+        sk << fixed << setprecision(0) << k;
+        piles_statistics << sk.str() << ",";
         //auto start = high_resolution_clock::now();
         biggest_piles_algebraic_method(k, 2, piles);
+        stringstream spiles_0,spiles_1;
+        spiles_0 << fixed << setprecision(0) << piles.at(0);
         //auto stop = high_resolution_clock::now();
         //piles_statistics << duration<double, std::milli>(stop - start).count() << ",";
-        piles_statistics << piles.at(0) << "," << piles.at(1);
-        piles_statistics << "\n";
+        piles_statistics << spiles_0.str() << ",";
+        spiles_1 << fixed << setprecision(0) << piles.at(1);
+        piles_statistics << spiles_1.str() << "\n";
       }
       piles_statistics.close();
     }
@@ -35,7 +42,7 @@ class MeasureTime
     static void calculate_time_n() {
       ofstream statistics;
       statistics.rdbuf()->pubsetbuf(0,0);
-      statistics.open("./statistics/calculate_time_n.csv",ios::app);
+      statistics.open("./statistics/csv/calculate_time_n.csv",ios::app);
       for(int i=0,k=10;i<25;i++,k*=2){
         statistics << k << ",";
         Recursive recursive(k, 2);
@@ -55,7 +62,7 @@ class MeasureTime
     static void calculate_time_a() {
       ofstream statistics;
       statistics.rdbuf()->pubsetbuf(0,0);
-      statistics.open("./statistics/calculate_time_a.csv",ios::app);
+      statistics.open("./statistics/csv/calculate_time_a.csv",ios::app);
       for(int i=0,a=2;i<25;i++,a*=2){
         statistics << a << ",";
         Algebraic algebraic(100000, a);
