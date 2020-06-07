@@ -32,7 +32,7 @@ void Recursive_and_Algebraic::reach_P_position(vector<int>& piles)
   //two case:
   //I  : if piles(0) is B_n, save n, then x = piles(0) and y = A_n,
   //II : if piles(0) is A_n, save n, if y > B_n then y  = B_n
-  //                                 if y < B_n, d = y -x, m = donji_ceo(d/a) then x = A_m, y = B_m, m < n
+  //                                 if y < B_n, d = y -x, m = floor(d/a) then x = A_m, y = B_m, m < n
   if(find(_B.begin(), _B.end(), piles.at(0)) != end(_B)) {
     auto it = find(_B.begin(),_B.end(), piles.at(0));
     vector<int>::size_type index = static_cast<vector<int>::size_type>(distance(_B.begin(), it));
