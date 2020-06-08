@@ -379,6 +379,21 @@ $ \mex(A)=\min\{i | i\notin A\} $.
 		s_{i} = \frac{r_{i+1} - r_{i}}{p_{i}} < \frac{p_{i+1}}{p_{i}} = \frac{a_{i+1}p_{i}+p_{i-1}}{p_{i}} = a_{i+1} + \frac{p_{i-1}}{p_{i}} \leq a_{i+1} + 1 
 	\end{displaymath}  
 	тако да је $ 0 \leq s_{i} \leq a_{i+1}, i \geq 0 $.
+	Претпоставимо да је $ s_{i} = a_{i+1} $ и $ s_{i-1} \geq 1 $ онда је 
+	\begin{displaymath}
+		\frac{r_{i} - r_{i-1}}{p_{i-1}} \geq 1
+		r{i} \geq p_{i-1} + r_{i-1}
+		r_{i} \geq p_{i-1}
+	\end{displaymath}
+	
+	\begin{displaymath}
+		\frac{r_{i+1} - r_{i}}{p_{i}} = a_{i+1}
+		r{i+1} = a_{i+1}p_{i} + r_{i}
+		r_{i+1} \geq a_{i+1}p_{i} + p_{i-1}
+		r_{i+1} \geq p_{i+1}
+	\end{displaymath}
+	
+	што је конттрадикција, стога је $ s_{i} = a_{i+1} => s_{i-1} = 0 , i \ge 1 $
 \end{proof}
 
 \begin{example}
