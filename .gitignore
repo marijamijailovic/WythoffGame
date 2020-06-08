@@ -11,6 +11,5 @@ src/WythoffGame
 *.bbl
 *.blg
 *.dvi
-*.bib
 
 src/statistics/.ipynb_checkpoints/
