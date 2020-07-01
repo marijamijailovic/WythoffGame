@@ -496,10 +496,10 @@ $ 1<\alpha<2 $: због $ \beta^{-1} = (\alpha+a)^{-1} < \frac{1}{2 }$ мора
 
 Рационални бројеви $ a_{0}, a_{0} + \frac{1}{a_{1}}, a_{0} + \frac{1}{a_{1} + \frac{1}{a_{2}}}, a_{0} + \frac{1}{a{1} + \frac{1}{a_{2} + \frac{1}{a_{3}}}} $ где је $ a_{i} > 0 $ и $ i > 0 $ су конвергенти броја $ \alpha $. 
 
-Конвергенти су веома добре рационалне апроксимације $ \alpha $. Показује се да ако је $ \alpha $ ирационалан и $ |\alpha - \frac{p_{n}}{q_{n}}| < \frac{1}{2q_{n}^2} $, где су $ p_{n} $ и $ q_{n} $ узајамно прости, онда је $ \frac{p_{n}}{q_{n}} $ увек конвергент $ \alpha $.
+Конвергенти су веома добре рационалне апроксимације $ \alpha $. Показује се да ако је $ \alpha $ ирационалан и $ |\alpha - \frac{p_{n}}{q_{n}}| < \frac{1}{2q_{n}^2} $, где су $ p_{n} $ и $ q_{n} $ узајамно прости, онда је $ \frac{p_{n}}{q_{n}} $ увек конвергент $ \alpha $. односно:
 
 \begin{displaymath}
-\frac{p_{n}}{q_{n}} = [1, a_{1}, , a_{2}, , a_{3}, ..., a_{n}]
+	\frac{p_{n}}{q_{n}} = [a_{0}, a_{1}, , a_{2}, , a_{3}, ..., a_{n}]
 \end{displaymath}
 
 \begin{lemma}
@@ -507,8 +507,14 @@ $ 1<\alpha<2 $: због $ \beta^{-1} = (\alpha+a)^{-1} < \frac{1}{2 }$ мора
 	$ p $ и $ q $ су низови рекурзивно дефинисани на следећи начин:
 	
 	\begin{eqnarray}
-	p_{-1} = 1, p_{0} = a_{0}, p_{n} = a_{n}p_{n-1} + p_{n-2}, (n \geq 1 )\\
-	q_{-1} = 0, q_{0} = 1, q_{n} = a_{n}q_{n-1} + q_{n-2}, (n \geq 1 ).
+		p_{-1} = 1, p_{0} = a_{0}, p_{n} = a_{n}p_{n-1} + p_{n-2}, (n \geq 1 )\\
+		q_{-1} = 0, q_{0} = 1, q_{n} = a_{n}q_{n-1} + q_{n-2}, (n \geq 1 ).
+	\end{eqnarray}
+	
+	Тада су конвергенти дати формулом:
+	
+	\begin{eqnarray}
+		\frac{p_{n}}{q_{n}} = \frac{a_{n}p_{n-1} + p_{n-2}}{a_{n}q_{n-1} + q_{n-2}},
 	\end{eqnarray}
 	
 	где је $ a_{0}, a_{1}, ... $ јединствени бесконачни низ природних бројева за које важи $ a_{0} = 1 $ и $ a_{1}, a_{2}, ... ,  $ су позитивни и $ a_{n} \ne 1 $.
@@ -516,60 +522,34 @@ $ 1<\alpha<2 $: због $ \beta^{-1} = (\alpha+a)^{-1} < \frac{1}{2 }$ мора
 
 \begin{proof}
 	
-	Индукцијом
+	Индукцијом се показује да се бројиоци и имениоци конвергената могу одредити полазећи од $ p_{-1} = 1, q_{-1} = 0, p_{0} = a_{0}, q_{0} = 1 $ на основу рекурентних релација $ p_{i} = a_{i}p_{i-1} + p_{i-2},  q_{i} = a_{i}q_{i-1} + q_{i-2}, i = 1, 2, ... $.
 	
-	http://poincare.matf.bg.ac.rs/%7Eezivkovm//nastava/kripto.pdf
-	strane 92-93
+	Прелаз у доказу индукцијом заснива се на замени $ а_{i} $ у верижном разломку $ \frac{p_{i}}{q_{i}} $, са $ a_{i} + \frac{1}{a_{i} + 1} $
+	у $ \frac{p_{i+1}}{q_{i+1}} $.
+	
+	По индуктивној хипотези је $ p_{i} = a_{i}p_{i-1} + p_{i-2}, q_{i} = a_{i}q_{i-1} + q_{i-2} $ и $ \frac{p_{i}}{q_{i}} = [a_{0}, a_{1}, , a_{2}, , a_{3}, ..., a_{i}] $. Због тога је:
+	
+	\begin{eqnarray*}
+		\frac{p_{i+1}}{q_{i+1}} &=& [a_{0}, a_{1}, , a_{2}, , a_{3}, ..., a_{i}, a_{i+1}] = [a_{0}, a_{1}, , a_{2}, , a_{3}, ..., a_{i}, a_{i} + \frac{1}{a_{i+1}}] \\
+		&=& \frac{(a_{i} + \frac{1}{a_{i+1}})p_{i-1} + p_{i-2}}{(a_{i} + \frac{1}{a_{i+1}})q_{i-1} + q_{i-2}} \\
+		&=& \frac{a_{i+1}a_{i}p_{i-1} + p_{i-1} + a_{i+1}p_{i-2}}{a_{i+1}a_{i}q_{i-1} + q_{i-1} + a_{i+1}q_{i-1}}\\
+		&=& \frac{a_{i+1}(a_{i}p_{i-1} + p_{i-2}) + p_{i-1}}{a_{i+1}(a_{i}q_{i-1} + q_{i-2}) + q_{i-1}}\\
+		&=& \frac{a_{i+1}p_{i} + p_{i-1}}{a_{i+1}q_{i} + q_{i-1}}. 
+	\end{eqnarray*}
 \end{proof}
 
-%Уобичајени запис за бесконачни верижни разломак је:
+\begin{lemma}
+	Специјално, ако је $ 1 < \alpha < 2 $. Верижни развој броја $ \alpha $ дефинисаног једнакошћу \ref{???} је:
+		\begin{displaymath}
+			\alpha = [1 ,a, a, a, a, ...].
+		\end{displaymath}  
+\end{lemma}
 
-%\begin{displaymath}
-%	[a_{0}, a_{1}, a_{2}, a_{3}, ...].
-%\end{displaymath}
-
-%Сваки ирационални број се једнозначно може преставити бесконачним верижним разломком. где се чланови низа $ a_{i} $ добијају се поступком Еуклидовог алгоритма.
-
-%\begin{eqnarray}
-%	\alpha = 1 + \frac{1}{a_{1} + \frac{1}{a_{2} + \frac{1}{a_{3} + ...}}} = [1, a_{1}, a_{2}, a_{3}, ...] 
-%\end{eqnarray}
-
-%Чланови низа $ a_{n} $ добијају се поступком сличним Еуклидовом алгоритму, тј. број $ \alpha $ одређује низ $ a_{n} $. Обрнуто сваки бесконачни верижни развoј једнозначно одређује ирационални број. При томе, ако је $ n > 1 $, онда је $ a_{n} > 1 $.
-
-%За $ \frac{p_{n}}{q_{n}} $, при чему су $ p_{n} $ и $ q_{n} $ узајамно прости, важи да је конвергент ирационалног броја $ \alpha $.  
-
-%\begin{displaymath}
-%	\frac{p_{n}}{q_{n}} = [1, a_{1}, , a_{2}, , a_{3}, ..., a_{n}]
-%\end{displaymath}
-
-%\begin{lemma}
-%	\label{def:p_q_nizovi}
-%	$ p $ и $ q $ су низови рекурзивно дефинисани на следећи начин:
-%	
-%	\begin{eqnarray}
-%	p_{-1} = 1, p_{0} = a_{0}, p_{n} = a_{n}p_{n-1} + p_{n-2}, (n \geq 1 )\\
-%	q_{-1} = 0, q_{0} = 1, q_{n} = a_{n}q_{n-1} + q_{n-2}, (n \geq 1 )
-%	\end{eqnarray}
-%	
-%	где је $ a_{0}, a_{1}, ... $ јединствени бесконачни низ природних бројева за које важи $ a_{0} = 1 $ и $ a_{1}, a_{2}, ... ,  $ су позитивни и $ a_{n} \ne 1 $.
-%\end{lemma}
-%
-%\begin{proof}
-%		http://poincare.matf.bg.ac.rs/%7Eezivkovm//nastava/kripto.pdf
-%strane 92-93
-%\end{proof}
-
-
-. Нека је $ \alpha $ ирационалан број, који задовоља услов $ 1 < \alpha < 2 $. Број  $ \alpha $ може се једнозначно представити бесконачним верижним разломком:
-
-Specijalno, verizni razvoj broja $ \alpha $ definisanog jednakoscu \eqref{3} je
-[1,a,a,a,a...]
-
-to bi mogla da bude lema. 
-
-dokaz: predlazem da to dokazete direktno, prema postupku za odredjivanje veriznog razvoja. Da biste se bolje snasli, mozete da to uradite prvo za a=1, pa za a=2, pa onda za opsti slucaj. Naravo, u dokaz cete da stavite samo opsti slucaj.
-
-// u radu u casopisu on moze da kaze da je nesto poznato. U mater radu vi te stvari morate da dokazete, ako nisu previse komplikovane; a nisu
+\begin{proof}
+	dokaz: predlazem da to dokazete direktno, prema postupku za odredjivanje veriznog razvoja. Da biste se bolje snasli, mozete da to uradite prvo za a=1, pa za a=2, pa onda za opsti slucaj. Naravo, u dokaz cete da stavite samo opsti slucaj.
+	
+	// u radu u casopisu on moze da kaze da je nesto poznato. U mater radu vi te stvari morate da dokazete, ako nisu previse komplikovane; a nisu
+\end{proof}
 
 Низ бројилаца $ p_{n} $ може се искористити као низ тежина за специјални бројни систем, за који кажемо да је $ p $-систем. Слично, низ именилаца $ q_{n} $ може се искористити као низ тежина за други бројни систем, за који кажемо да је $ q $-систем.
 
