@@ -43,7 +43,7 @@ class MeasureTime
       ofstream statistics;
       statistics.rdbuf()->pubsetbuf(0,0);
       statistics.open("./statistics/csv/calculate_time_n.csv",ios::app);
-      for(int i=0,k=10;i<25;i++,k*=2){
+      for(int i=0,k=10;i<23;i++,k*=2){
         statistics << k << ",";
         Recursive recursive(k, 2);
         auto rec = bind(&Recursive::p_positions,recursive);

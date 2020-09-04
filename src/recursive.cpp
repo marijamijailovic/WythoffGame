@@ -11,9 +11,10 @@ void Recursive::p_positions()
 
   vector<int>::size_type c_size = vector<int>::size_type(2*_n+1);
   _C.resize(c_size,0);
-
+  int last_mex_index = 1;
   for(int i=1;i<=_n;i++){
-    int mex = get_min_positive();
+    int mex = get_min_positive(last_mex_index);
+    last_mex_index = mex;
     _A.push_back(mex);
     int b = _A.at(vector<int>::size_type(i))+_a*i;
     _B.push_back(b);
@@ -24,8 +25,8 @@ void Recursive::p_positions()
   }
 }
 
-int Recursive::get_min_positive()
+int Recursive::get_min_positive(int last_mex_index)
 {
-  auto it = find(_C.begin()+1,_C.end(),0);
+  auto it = find(_C.begin()+last_mex_index,_C.end(),0);
   return static_cast<int>(distance(_C.begin(), it));
 }

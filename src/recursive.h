@@ -20,7 +20,7 @@ class Recursive : public Recursive_and_Algebraic
   private:
     vector<int> _C;
     //map<int, int> _map;
-    int get_min_positive();
+    int get_min_positive(int last_index);
 };
 
 #endif
