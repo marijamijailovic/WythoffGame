@@ -117,7 +117,7 @@ void Arithmetic::arithmetic_strategy(vector<int> &piles) {
   vector<int> _Rp = _p_system.find(piles[0])->second;
   int number_of_zeros_p = number_of_zeros_from_end(_Rp);
 
-  if ((number_of_zeros_p / 2) != 0) {
+  if (number_of_zeros_p % 2 != 0) {
     odd_number_of_zeros(piles, _Rp);
   } else {
     even_number_of_zeros(piles, _Rp);
@@ -151,7 +151,7 @@ void Arithmetic::even_number_of_zeros(vector<int> &piles, vector<int> &R) {
     vector<int> _Rq = _q_system.find(m)->second;
     int number_of_zeros_q = number_of_zeros_from_end(_Rq);
     _Ip = p_interpretation(_Rq);
-    if (fmod(number_of_zeros_q, 2) != 0) {
+    if (number_of_zeros_q % 2 != 0) {
       piles[0] = _Ip - 1;
       piles[1] = _Ip - 1 + m * _a;
     } else {

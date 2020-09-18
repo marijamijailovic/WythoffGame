@@ -11,9 +11,6 @@ bool Game_Helper::isMoveAllow(vector<int> &piles, int a, int x, int y) {
   if (x == 0 && y == 0) {
     return false;
   }
-  if (piles[0] - x > piles[1] - y) {
-    return false;
-  }
   if (x > 0 && y > 0 && !(abs(x - y) < a)) {
     return false;
   }
@@ -39,10 +36,16 @@ void Game_Helper::player_move(vector<int> &piles, int a) {
     cin >> y;
   }
 
-  piles[0] -= x;
-  piles[1] -= y;
+  if (piles[0] - x > piles[1] - y) {
+    int tmp = piles[1] - y;
+    piles[1] = piles[0] - x;
+    piles[0] = tmp;
+  } else {
+    piles[0] -= x;
+    piles[1] -= y;
+  }
 
-  cout << "Current state od piles is (" << piles[0] << ", " << piles[1] << ")"
+  cout << "Current state of piles is (" << piles[0] << ", " << piles[1] << ")"
        << endl;
 }
 
@@ -58,10 +61,16 @@ void Game_Helper::computer_move(vector<int> &piles, int a) {
       computer_y = rand() % piles[1];
     }
 
-    piles[0] -= computer_x;
-    piles[1] -= computer_y;
+    if (piles[0] - computer_x > piles[1] - computer_y) {
+      int tmp = piles[1] - computer_y;
+      piles[1] = piles[0] - computer_x;
+      piles[0] = tmp;
+    } else {
+      piles[0] -= computer_x;
+      piles[1] -= computer_y;
+    }
   }
-  cout << "Current state od piles is (" << piles[0] << ", " << piles[1] << ")"
+  cout << "Current state of piles is (" << piles[0] << ", " << piles[1] << ")"
        << endl;
 }
 
