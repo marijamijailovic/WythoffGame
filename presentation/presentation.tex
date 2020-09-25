@@ -1,0 +1,398 @@
+%% This Beamer template is based on the one found here: https://github.com/sanhacheong/stanford-beamer-presentation, and edited to be used for Stanford ARM Lab
+
+\documentclass[10pt]{beamer}
+%\mode<presentation>{}
+
+\usepackage{media9}
+\usepackage{amssymb,amsmath,amsthm,enumerate}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage[parfill]{parskip}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{bm}
+\usepackage{amsfonts,amscd}
+\usepackage[]{units}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{tcolorbox}
+\usepackage{physics}
+\usepackage[T2A]{fontenc} % enable Cyrillic fonts
+\usepackage[utf8]{inputenc} % make weird characters work
+
+% Enable colored hyperlinks
+\hypersetup{colorlinks=true}
+
+% The following three lines are for crossmarks & checkmarks
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+% Numbered captions of tables, pictures, etc.
+\setbeamertemplate{caption}[numbered]
+
+%\usepackage[superscript,biblabel]{cite}
+\usepackage{algorithm2e}
+\renewcommand{\thealgocf}{}
+
+% Bibliography settings
+\usepackage[style=ieee]{biblatex}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+\addbibresource{references.bib}
+
+% Glossary entries
+\usepackage[acronym]{glossaries}
+\newacronym{ML}{ML}{machine learning}
+\newacronym{HRI}{HRI}{human-robot interactions}
+\newacronym{RNN}{RNN}{Recurrent Neural Network}
+\newacronym{LSTM}{LSTM}{Long Short-Term Memory}
+
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{definition}
+
+\newcommand{\empy}[1]{{\color{darkorange}\emph{#1}}}
+\newcommand{\empr}[1]{{\color{cardinalred}\emph{#1}}}
+\newcommand{\examplebox}[2]{
+\begin{tcolorbox}[colframe=darkcardinal,colback=boxgray,title=#1]
+#2
+\end{tcolorbox}}
+
+\DeclareMathOperator{\mex}{mex}
+
+\usetheme{Stanford} 
+\input{./style_files_stanford/my_beamer_defs.sty}
+\logo{\includegraphics[height=0.4in]{./matf_logo.png}}
+
+% commands to relax beamer and subfig conflicts
+% see here: https://tex.stackexchange.com/questions/426088/texlive-pretest-2018-beamer-and-subfig-collide
+\makeatletter
+\let\@@magyar@captionfix\relax
+\makeatother
+
+\title[Игра ним]{Игра ним}
+%\subtitle{Subtitle Of Presentation}
+
+%\beamertemplatenavigationsymbolsempty
+
+\begin{document}
+
+\author[Марија Мијаиловић]{
+	\begin{tabular}{c} 
+	\large
+	Марија Мијаиловић\\
+	\end{tabular}
+\vspace{-4ex}}
+
+\institute{
+	\vskip 5pt
+	Ментор: проф.др Миодраг Живковић
+	\begin{figure}
+		\centering
+		\begin{subfigure}[t]{0.5\textwidth}
+			\centering
+			\includegraphics[height=0.33in]{./matf_logo.png}
+		\end{subfigure}%
+	\end{figure}
+	\vskip 5pt
+	Математички факултет\\
+	Универзитет у Београду\\
+	\vskip 3pt
+}
+
+\date{Септембар, 2020}
+
+\begin{noheadline}
+\begin{frame}\maketitle\end{frame}
+\end{noheadline}
+
+\setbeamertemplate{itemize items}[default]
+\setbeamertemplate{itemize subitem}[circle]
+
+\begin{frame}
+	\frametitle{Садржај} % Table of contents slide, comment this block out to remove it
+	\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+\section{Игра ним}
+% `[allowframebreaks]` can be used to have multiple slides in one frame, where the slides are continued with the suffix "(cont.)"; `[allowframebreaks]` can be used with `\framebreak` to manually break each frame into multiple slides
+
+	\begin{frame}{Игра ним}
+		\begin{itemize}
+			\item Два играча
+			\item Број жетона и гомила на столу одређују сами играчи
+			\item Жетони се узимају само са једне гомиле, и мора се узети бар један жетон
+			\item Нормални и мизерни ним
+		\end{itemize}
+	\end{frame}		
+%
+%	\begin{frame}{Варијантe нима}
+%		\begin{itemize}
+%			\item Нормални ним
+%			\item Мизерни ним
+%			\item Индекс k игра
+%			\item Похлепни ним
+%			\item Градитељски ним
+%			\item Витховофа игра
+%		\end{itemize}
+%	\end{frame}
+		
+	\begin{frame}{Пример тока игре нормалног нима}
+		\begin{figure}
+	        \centering
+	        \includegraphics[width=0.8\textwidth]{../src/statistics/picture/NimPrimer.png}
+	        \caption{Ток ним игре}
+	        \label{fig:nimprimer}
+	    \end{figure}
+	\end{frame}
+
+\section{Витхофова игра}
+	\begin{frame}{Оптимална стратегија за Витхофову игру}
+		
+		\begin{itemize}
+			\item Две гомиле жетона - позиција се може представити паром бројева $ (x, y) $, где је $ x \leq  y $
+			\item Жетони се узимају са једне или обе гомиле - приликом узимања жетона са обе гомилe, рецимо $ k (> 0) $ са једне и $ l (> 0) $ са друге, мора да буде испуњен услов $ |k - l| < a $, где је $ a $ задати позитиван број који се одређује пре почетка партије и не мења се у току саме партије
+			\item Све позиције се могу разврстати у добитне и изгубљене
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Оптимална стратегија за Витхофову игру}
+		Да би се Витхофова игра играла на најбољи могући начин, потребно је знати две ствари:
+		\begin{itemize}
+			\item Препознати природу тренутне позиције, да ли је добитна или изгубљена.
+			\item Уколико је тренутна позиција добитна, треба одредити следећи потез тако да се противник нађе у изгубљеној позицији.
+		\end{itemize}		
+	\end{frame}
+	
+	\begin{frame}{Изгубљене позиције за $ a = 1 $}
+		\begin{center}
+			\begin{minipage}[t]{.20\linewidth}
+				\begin{table}[h!]
+					\begin{center}
+						\begin{tabular}{  c | c | c }
+							{\textbf{n}} &  {\textbf{A}} &  {\textbf{B}} \\
+							\hline
+							0 & 0 & 0 \\
+							1 & 1 & 2 \\
+							2 & 3 & 5 \\
+							3 & 4 & 7 \\
+							4 & 6 & 10 \\
+							5 & 8 & 13 \\
+							6 & 9 & 15 \\
+							7 & 11 & 18 \\
+							8 & 12 & 20 \\
+							9 & 14 & 23 \\
+							10 & 16 & 26\\
+							11 & 17 & 28\\ 
+						\end{tabular}
+					\end{center}
+				\end{table}
+			\end{minipage}%
+			\begin{minipage}[t]{.80\linewidth}
+				\vspace{0pt}
+				\centering
+				\includegraphics[width=0.8\textwidth]{../src/statistics/picture/p_positions_a=1.png}
+			\end{minipage}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}{Рекурзивна стратегија}
+		\begin{tcolorbox}[title=Дефиниција оператора $ \mex $]
+			$\mex(A)$ означава најмањи природни број који није у скупу $ A $, тј. $ \mex(\emptyset)=0 $ и
+			$ \mex(A)=\min\{i | i\notin A\} $.
+		\end{tcolorbox}
+	
+	    \begin{tcolorbox}[title=Рекурзивна карактеризација изгубљених позиција]
+	    	Све изгубљене позиције $ (A_{n}, B_{n}) $ могу се изразити на следећи начин:
+	    	\begin{eqnarray}
+		    	&A_{n} = &\mex \{ A_{i}, B_{i} : i < n \}\\
+		    	&B_{n} = &A_{n} + an
+	    	\end{eqnarray}
+	    \end{tcolorbox}
+	\end{frame}
+
+	\begin{frame}{Алгебарска стратегија}
+		\begin{tcolorbox}[title=Алгебарска карактеризација изгубљених позиција]
+			Све изгубљене позиције $ (A_{n}, B_{n}) $ могу експлицитно изразити на следећи начин $ A_{n} = \lfloor \alpha \cdot n \rfloor, B_{n} = \lfloor \beta \cdot n \rfloor $, где је:
+			\begin{eqnarray}
+				&\alpha = &\frac{2 - a + \sqrt{a^2 + 4}}{2} \label{def:alpha}\\  
+				&\beta = &\alpha + a \label{def:beta},
+			\end{eqnarray}
+	    	овде су $ \alpha $ и $ \beta $ ирационални за свако $ a > 0 $
+		\end{tcolorbox}
+	\end{frame}
+	
+	\begin{frame}{Достизање изгубљених позиција рекурзивном и алгебарском стратегијом}
+		\begin{itemize}
+			\item Из изгубљене позиције, једним потезом може се прећи само у добитну позицију
+			\item Из добитне позиције једним потезом може се прећи у изгубљену позицију.
+			\begin{itemize}
+				\item Ако је $ x = B_{n} $ онда се из позиције $ (x = B_{n}, y) $ може једним потезом (скидањем жетона са гомиле на којој је $ y $ жетона) прећи у изгубљену позицију $ (A_{n}, B_{n}) $ 
+				\item Ако је $ x = A_{n} $ и $ y > B_{n} $, онда се смањивањем $ y $ може доћи у позицију $ (A_{n}, B_{n}) $. У противном, ако је 
+				$ A_{n} \leq y < B_{n} $ онда се смањивањем $ x $ и $ y $ може прећи у позицију $ (A_{m}, B_{m}) $, где је $ m = \lfloor \frac{d}{a} \rfloor $ и $ d = y - x $
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Верижни разломак}
+		\begin{tcolorbox}
+			Број $ \alpha $ се може једнозначно представити бесконачним верижним разломком облика:
+			\begin{eqnarray}
+				\alpha = a_{0} + \frac{1}{a_{1} + \frac{1}{a_{2} + \frac{1}{a_{3} + \ldots}}},
+			\end{eqnarray}
+			$ \alpha $ ирационалан број, који задовољава услов $ 1 < \alpha < 2 $.
+		\end{tcolorbox}
+	
+		\begin{tcolorbox}
+			Нека је $ [a_{0}, a_{1}, a_{2}, \ldots] $ верижни развој броја $ \alpha $ и за низове $ p_{n} $ и $ q_{n} $ важи следећа рекурентна релација:
+			\begin{eqnarray}
+			p_{-1} = 1,\ p_{0} = a_{0},\ p_{n} = a_{n}p_{n-1} + p_{n-2},\ (n \geq 1 )\\
+			q_{-1} = 0,\ q_{0} = 1,\ q_{n} = a_{n}q_{n-1} + q_{n-2},\ (n \geq 1 ).
+			\end{eqnarray}
+		\end{tcolorbox}
+	\end{frame}
+
+	\begin{frame}{$ p $ и $ q $ системи нумерације}
+		\begin{tcolorbox}[title=$ p $-систем]
+			\begin{eqnarray}
+				N = \sum_{i=0}^{m} s_{i}p_{i}, 0 \leq s_{i} \leq a_{i+1},
+			\end{eqnarray}	
+			при чему, ако је $ s_{i+1} = a_{i+2} $, онда је $ s_{i} = 0  $ за свако $ i \geq 0 $.
+		\end{tcolorbox}
+		
+		\begin{tcolorbox}[title=$ q $-систем]
+			\begin{eqnarray}
+			N = \sum_{i=0}^{n} t_{i}q_{i}, 0 \leq t_{0} < a_{1},\ 0 \leq t_{i} \leq a_{i+1},
+			\end{eqnarray}
+			при чему, ако је $ t_{i} = a_{i+1} $, онда је $ t_{i-1} = 0 $ за свако $ i \geq 1 $.
+		\end{tcolorbox}
+	\end{frame}
+	
+	\begin{frame}
+		\begin{tcolorbox}[title=Репрезентација $ R $ је  $ (m+1) $-торка за коју важи:]
+			\begin{eqnarray}
+			R = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}), \ 0 \leq d_{i} \leq a_{i+1},
+			\end{eqnarray}
+			при чему за свако $ i \geq 0 $ важи: ако је $ d_{i+1} = a_{i+2} $ онда је $ d_{i} = 0 $.
+		\end{tcolorbox}
+	
+		\begin{tcolorbox}[title=$ p $-интерпретација и $ q $-интерпретација репрезентације $ R $]
+			\begin{eqnarray}
+				I_{p} = \sum_{i=0}^{m} d_{i}p_{i}\\
+				I_{q} = \sum_{i=0}^{m} d_{i}q_{i}
+			\end{eqnarray} 	
+		\end{tcolorbox}
+	\end{frame}
+	\begin{frame}
+		
+		Веза између $ p $-интерпретације $ I_{p} $ и $ q $-репрезентације $ R_{q} $:
+			\begin{displaymath}
+			I_{p}(R_{q}(k)) = I_{p}(d_{m}, d_{m-1}, \ldots, d_{0}).
+			\end{displaymath}
+			
+		$ R^{'} = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}, 0) $ - леви померај репрезентације $ R $\\
+		$ R^{''} = (d_{m}, d_{m-1}, \ldots , d_{1}) $ - десни померај репрезентације $ R $		
+	\end{frame}
+	
+	\begin{frame}{Приказ првих неколико бројева записаних у $ p $ и $ q $ систему, за $ a_{i} = 2 $, $ i \geq 1 $}
+		\begin{table}[h!]
+			\begin{center}
+				\begin{tabular}{ | c | c | c | c | c  c | c | c | c | c | c |}
+					\hline
+					{$ \mathbf{q_{3}} $} &  {$ \mathbf{q_{2}} $} &  {$ \mathbf{q_{1}} $} &  {$ \mathbf{q_{0}} $} & & &  {$ \mathbf{p_{3}} $} &  {$ \mathbf{p_{2}} $} &  {$ \mathbf{p_{1}} $} &  {$ \mathbf{p_{0}} $} &\\
+					12 & 5 & 2 & 1 & & & 17 & 7 & 3 & 1 &  {$ \mathbf{n} $}\\
+					\hline
+					&  &  & 1 & & &  &  &  & 1 & {$ \mathbf{1} $}\\
+					&  & 1 & 0 & & &  &  &  & 2 & {$ \mathbf{2} $}\\
+					&  & 1 & 1 & & &  &  & 1 & 0 &  {$ \mathbf{3} $}\\
+					&  & 2 & 0 & & &  &  & 1 & 1 &  {$ \mathbf{4} $}\\
+					& 1 & 0 & 0 & & &  &  & 1 & 2 &  {$ \mathbf{5} $}\\
+					& 1 & 0 & 1 & & &  &  & 2 & 0 &  {$ \mathbf{6} $}\\
+					& 1 & 1 & 0 & & &  & 1 & 0 & 0 &  {$ \mathbf{7} $}\\
+					& 1 & 1 & 1 & & &  & 1 & 0 & 1 &  {$ \mathbf{8} $}\\
+					& 1 & 2 & 0 & & &  & 1 & 0 & 2 &  {$ \mathbf{9} $}\\
+					& 2 & 0 & 0 & & &  & 1 & 1 & 0 &  {$ \mathbf{10} $}\\
+					& 2 & 0 & 1 & & &  & 1 & 1 & 1 &  {$ \mathbf{11} $}\\
+					1 & 0 & 0 & 0 & & & & 1 & 1 & 2 &  {$ \mathbf{12} $}\\
+					1 & 0 & 0 & 1 & & & & 1 & 2 & 0 &  {$ \mathbf{13} $}\\
+					1 & 0 & 1 & 0 & & & & 2 & 0 & 0 &  {$ \mathbf{14} $}\\
+					1 & 0 & 1 & 1 & & & & 2 & 0 & 1 &  {$ \mathbf{15} $}\\
+					\hline 
+				\end{tabular}
+			\end{center}
+		\end{table}
+	\end{frame}
+	
+	\begin{frame}{Аритметичка карактеризација изгубљених позиција}
+		
+		Уколико је текућа позиција $ (x, y), 0 < x \leq y $, прво се рачуна $ R_{p}(x) $ и проверава се да ли се завршава парним или непарним бројем нула.
+		
+		\begin{enumerate}
+			\item \label{item:neparne_nule} Уколико се $ R_{p}(x) $ завршава непарним бројем нула, онда је $ x = B_{n} $, тако да је победнички потез $ (x, y) \rightarrow (I_{p}(R^{''}_{p}(x)), x) $.
+			\item \label{item:parne_nule} Уколико се $ R_{p}(x) $ завршава парним бројем нула, онда је $ x = A_{n} $. Ако је $ y > I_{p}(R^{'}_{p}(x)) $ победнички потез је $ (x, y) \rightarrow (x, I_{p}(R^{'}_{p}(x)) $. У противном, ако је $ y < I_{p}(R^{'}_{p}(x) $, рачунамо $ d = y - x, m = \lfloor \frac{d}{a} \rfloor $. Уколико се $ R_{q}(m) $ завршава парним бројем нула, онда је $ A_{m} = I_{p}(R_{q}(m)) $; у противном je $ A_{m} = I_{p}(R_{q}(m)) + 1 $.
+			У оба случаја победнички потез је $ (x, y) \rightarrow (A_{m}, A_{m} + ma) $.
+		\end{enumerate}		
+	\end{frame}
+
+\section{Имплементација и евалуација}
+
+\begin{frame}{Имплементација и евалуација}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/recursive.png}
+		\caption{График рекурзивне стратегије за конструкцију табеле изгубљених позиција
+		за $ n $ до $ 41943040 $}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}{Имплементација и евалуација}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/algebraic.png}
+		\caption{График алгебарске стратегије за конструкцију табеле изгубљених позиција за $ n $ до $ 41943040 $}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}{Имплементација и евалуација}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/arithmetic.png}
+		\caption{График аритметике стратегије за конструкцију табеле изгубљених позиција за $ n = 41943040 $}
+	\end{figure}
+	
+\end{frame}
+
+
+\begin{frame}{Имплементација и евалуација}
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=\textwidth]{../src/statistics/picture/all.png}
+		\end{center}
+		\caption{Сумиран приказ извршавања свих стратегија за конструкцију табеле изгубљених позиција}
+	\end{figure}
+\end{frame}
+\begin{frame}{Имплементација и евалуација}	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=\textwidth]{../src/statistics/picture/algebraicVSrecursive.png}
+		\end{center}
+		\caption{Сумиран приказ извршавања рекурзивне и алгебарске стратегије за конструкцију табеле изгубљених позиција}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Крај}
+	\begin{center}
+		Хвала на пажњи!\\
+		Питања?
+	\end{center}
+\end{frame}
+
+\end{document}
