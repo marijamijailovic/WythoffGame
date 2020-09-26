@@ -18,41 +18,16 @@
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{tcolorbox}
-\usepackage{physics}
 \usepackage[T2A]{fontenc} % enable Cyrillic fonts
 \usepackage[utf8]{inputenc} % make weird characters work
+\usepackage[serbianc]{babel}
 
 % Enable colored hyperlinks
 \hypersetup{colorlinks=true}
 
-% The following three lines are for crossmarks & checkmarks
-\usepackage{pifont}% http://ctan.org/pkg/pifont
-\newcommand{\cmark}{\ding{51}}%
-\newcommand{\xmark}{\ding{55}}%
-
 % Numbered captions of tables, pictures, etc.
 \setbeamertemplate{caption}[numbered]
 
-%\usepackage[superscript,biblabel]{cite}
-\usepackage{algorithm2e}
-\renewcommand{\thealgocf}{}
-
-% Bibliography settings
-\usepackage[style=ieee]{biblatex}
-\setbeamertemplate{bibliography item}{\insertbiblabel}
-\addbibresource{references.bib}
-
-% Glossary entries
-\usepackage[acronym]{glossaries}
-\newacronym{ML}{ML}{machine learning}
-\newacronym{HRI}{HRI}{human-robot interactions}
-\newacronym{RNN}{RNN}{Recurrent Neural Network}
-\newacronym{LSTM}{LSTM}{Long Short-Term Memory}
-
-
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
-\theoremstyle{definition}
 
 \newcommand{\empy}[1]{{\color{darkorange}\emph{#1}}}
 \newcommand{\empr}[1]{{\color{cardinalred}\emph{#1}}}
@@ -62,34 +37,39 @@
 \end{tcolorbox}}
 
 \DeclareMathOperator{\mex}{mex}
-
+\DeclareMathOperator{\comma}{,}
+\DeclareMathOperator{\leftbracket}{[}
+\DeclareMathOperator{\rightbracket}{]}
 \usetheme{Stanford} 
-\input{./style_files_stanford/my_beamer_defs.sty}
+%\input{./style_files_stanford/my_beamer_defs.sty}
 \logo{\includegraphics[height=0.4in]{./matf_logo.png}}
 
 % commands to relax beamer and subfig conflicts
 % see here: https://tex.stackexchange.com/questions/426088/texlive-pretest-2018-beamer-and-subfig-collide
-\makeatletter
-\let\@@magyar@captionfix\relax
-\makeatother
+%\makeatletter
+%\let\@@magyar@captionfix\relax
+%\makeatother
 
-\title[Игра ним]{Игра ним}
+\title[Игра ним]{
+	{\huge Игра ним}
+}
 %\subtitle{Subtitle Of Presentation}
 
-%\beamertemplatenavigationsymbolsempty
-
+\beamertemplatenavigationsymbolsempty
+%\vspace{10ex}
 \begin{document}
-
-\author[Марија Мијаиловић]{
-	\begin{tabular}{c} 
-	\large
-	Марија Мијаиловић\\
-	\end{tabular}
-\vspace{-4ex}}
+\author[Марија Мијаиловић]{	
+	%\vspace{-5ex}
+	{
+		\parbox{0.45\textwidth}
+			{\raggedright \textit{Аутор}:\\Марија Мијаиловић}
+			\hfill
+		\parbox{0.45\textwidth}
+		{\raggedleft \textit{Ментор}:\\проф.др Миодраг Живковић}
+	}
+}
 
 \institute{
-	\vskip 5pt
-	Ментор: проф.др Миодраг Живковић
 	\begin{figure}
 		\centering
 		\begin{subfigure}[t]{0.5\textwidth}
@@ -97,13 +77,11 @@
 			\includegraphics[height=0.33in]{./matf_logo.png}
 		\end{subfigure}%
 	\end{figure}
-	\vskip 5pt
-	Математички факултет\\
-	Универзитет у Београду\\
-	\vskip 3pt
+	{\footnotesize{Математички факултет}}\\
+	{\footnotesize{Универзитет у Београду}}
 }
 
-\date{Септембар, 2020}
+\date{{\scriptsize{Септембар, 2020}}}
 
 \begin{noheadline}
 \begin{frame}\maketitle\end{frame}
@@ -150,22 +128,22 @@
 	\end{frame}
 
 \section{Витхофова игра}
-	\begin{frame}{Оптимална стратегија за Витхофову игру}
+	\begin{frame}{Шта је Витхофова игра?}
 		
 		\begin{itemize}
-			\item Две гомиле жетона - позиција се може представити паром бројева $ (x, y) $, где је $ x \leq  y $
-			\item Жетони се узимају са једне или обе гомиле - приликом узимања жетона са обе гомилe, рецимо $ k (> 0) $ са једне и $ l (> 0) $ са друге, мора да буде испуњен услов $ |k - l| < a $, где је $ a $ задати позитиван број који се одређује пре почетка партије и не мења се у току саме партије
+			\item Две гомиле жетона
+			\item Жетони се узимају са једне или обе гомиле
 			\item Све позиције се могу разврстати у добитне и изгубљене
 		\end{itemize}
 	\end{frame}
 
-	\begin{frame}{Оптимална стратегија за Витхофову игру}
-		Да би се Витхофова игра играла на најбољи могући начин, потребно је знати две ствари:
-		\begin{itemize}
-			\item Препознати природу тренутне позиције, да ли је добитна или изгубљена.
-			\item Уколико је тренутна позиција добитна, треба одредити следећи потез тако да се противник нађе у изгубљеној позицији.
-		\end{itemize}		
-	\end{frame}
+%	\begin{frame}{Оптимална стратегија за Витхофову игру}
+%		Да би се Витхофова игра играла на најбољи могући начин, потребно је знати две ствари:
+%		\begin{itemize}
+%			\item Препознати природу тренутне позиције, да ли је добитна или изгубљена.
+%			\item Уколико је тренутна позиција добитна, треба одредити следећи потез тако да се противник нађе у изгубљеној позицији.
+%		\end{itemize}		
+%	\end{frame}
 	
 	\begin{frame}{Изгубљене позиције за $ a = 1 $}
 		\begin{center}
@@ -225,29 +203,27 @@
 		\end{tcolorbox}
 	\end{frame}
 	
-	\begin{frame}{Достизање изгубљених позиција рекурзивном и алгебарском стратегијом}
+%	\begin{frame}{Рекурзивна и алгебарска карактеризација изгубљених позиција}
+%		\begin{itemize}
+%			\item Ако је $ x = B_{n} $ онда се из позиције $ (x = B_{n}, y) $ може једним потезом (скидањем жетона са гомиле на којој је $ y $ жетона) прећи у изгубљену позицију $ (A_{n}, B_{n}) $ 
+%			\item Ако је $ x = A_{n} $ и $ y > B_{n} $, онда се смањивањем $ y $ може доћи у позицију $ (A_{n}, B_{n}) $. У противном, ако је 
+%			$ A_{n} \leq y < B_{n} $ онда се смањивањем $ x $ и $ y $ може прећи у позицију $ (A_{m}, B_{m}) $, где је $ m = \lfloor \frac{d}{a} \rfloor $ и $ d = y - x $
+%		\end{itemize}
+%	\end{frame}
+	
+	\begin{frame}{Рекурзивна и алгебарска карактеризација изгубљених позиција}
+		Нека је $ a = 1 $ и тренутна позиција $ (x, y) $ је:
 		\begin{itemize}
-			\item Из изгубљене позиције, једним потезом може се прећи само у добитну позицију
-			\item Из добитне позиције једним потезом може се прећи у изгубљену позицију.
-			\begin{itemize}
-				\item Ако је $ x = B_{n} $ онда се из позиције $ (x = B_{n}, y) $ може једним потезом (скидањем жетона са гомиле на којој је $ y $ жетона) прећи у изгубљену позицију $ (A_{n}, B_{n}) $ 
-				\item Ако је $ x = A_{n} $ и $ y > B_{n} $, онда се смањивањем $ y $ може доћи у позицију $ (A_{n}, B_{n}) $. У противном, ако је 
-				$ A_{n} \leq y < B_{n} $ онда се смањивањем $ x $ и $ y $ може прећи у позицију $ (A_{m}, B_{m}) $, где је $ m = \lfloor \frac{d}{a} \rfloor $ и $ d = y - x $
-			\end{itemize}
+			\item $ (13, 29) $, како је $ B_{5} = 13 $, то се из позиције $ (13, 29) $ уклањајући $ 21 $ жетона прелази у позицију $ (A_{5}, B_{5}) = (8, 13) $. 
+			\item $ (12, 29) $, како је $ A_{8} = 12 $ и $ 29 > B_{8} = 20 $, то се из позиције $ (12, 29) $ уклањајући $ 9 $ жетона прелази у позицију $ (A_{8}, B_{8}) = (12, 20) $.
+			\item $ (12, 15) $, како је $ A_{8} = 12 $ и $ 15 < B_{8} = 20 $, то се из позиције $ (12, 15) $ уклањајући по $ 8 $ жетона са обе гомиле прелази у позицију $ (A_{3}, B_{3}) = (4, 7) $.
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}{Верижни разломак}
-		\begin{tcolorbox}
-			Број $ \alpha $ се може једнозначно представити бесконачним верижним разломком облика:
-			\begin{eqnarray}
-				\alpha = a_{0} + \frac{1}{a_{1} + \frac{1}{a_{2} + \frac{1}{a_{3} + \ldots}}},
-			\end{eqnarray}
-			$ \alpha $ ирационалан број, који задовољава услов $ 1 < \alpha < 2 $.
-		\end{tcolorbox}
 	
+	\begin{frame}{Аритметичка стратегија}
 		\begin{tcolorbox}
-			Нека је $ [a_{0}, a_{1}, a_{2}, \ldots] $ верижни развој броја $ \alpha $ и за низове $ p_{n} $ и $ q_{n} $ важи следећа рекурентна релација:
+			[title=Нека је $ \leftbracket a_{0}\comma a_{1}\comma a_{2}\comma \ldots \rightbracket $ верижни развој броја $ \alpha $ и за низове $ p_{n} $ и $ q_{n} $ важи следећа рекурентна релација:]
 			\begin{eqnarray}
 			p_{-1} = 1,\ p_{0} = a_{0},\ p_{n} = a_{n}p_{n-1} + p_{n-2},\ (n \geq 1 )\\
 			q_{-1} = 0,\ q_{0} = 1,\ q_{n} = a_{n}q_{n-1} + q_{n-2},\ (n \geq 1 ).
@@ -255,49 +231,16 @@
 		\end{tcolorbox}
 	\end{frame}
 
-	\begin{frame}{$ p $ и $ q $ системи нумерације}
-		\begin{tcolorbox}[title=$ p $-систем]
-			\begin{eqnarray}
-				N = \sum_{i=0}^{m} s_{i}p_{i}, 0 \leq s_{i} \leq a_{i+1},
-			\end{eqnarray}	
-			при чему, ако је $ s_{i+1} = a_{i+2} $, онда је $ s_{i} = 0  $ за свако $ i \geq 0 $.
-		\end{tcolorbox}
-		
-		\begin{tcolorbox}[title=$ q $-систем]
-			\begin{eqnarray}
-			N = \sum_{i=0}^{n} t_{i}q_{i}, 0 \leq t_{0} < a_{1},\ 0 \leq t_{i} \leq a_{i+1},
-			\end{eqnarray}
-			при чему, ако је $ t_{i} = a_{i+1} $, онда је $ t_{i-1} = 0 $ за свако $ i \geq 1 $.
-		\end{tcolorbox}
+	\begin{frame}{Аритметичка стратегија}
+		\begin{itemize}
+			\item Репрезентација $ R $ је $ R = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}), \ 0 \leq d_{i} \leq a_{i+1} $
+			\item Леви померај репрезентације $ R $ је $ R^{'} = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}, 0) $
+			\item Десни померај репрезентације $ R $ је $ R^{''} = (d_{m}, d_{m-1}, \ldots , d_{1}) $
+			\item Веза $ p $-интерпретације $ I_{p} $ и $ q $-репрезентације $ R_{q} $ је $ I_{p}(R_{q}(k)) = I_{p}(d_{m}, d_{m-1}, \ldots, d_{0}) $
+		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}
-		\begin{tcolorbox}[title=Репрезентација $ R $ је  $ (m+1) $-торка за коју важи:]
-			\begin{eqnarray}
-			R = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}), \ 0 \leq d_{i} \leq a_{i+1},
-			\end{eqnarray}
-			при чему за свако $ i \geq 0 $ важи: ако је $ d_{i+1} = a_{i+2} $ онда је $ d_{i} = 0 $.
-		\end{tcolorbox}
-	
-		\begin{tcolorbox}[title=$ p $-интерпретација и $ q $-интерпретација репрезентације $ R $]
-			\begin{eqnarray}
-				I_{p} = \sum_{i=0}^{m} d_{i}p_{i}\\
-				I_{q} = \sum_{i=0}^{m} d_{i}q_{i}
-			\end{eqnarray} 	
-		\end{tcolorbox}
-	\end{frame}
-	\begin{frame}
-		
-		Веза између $ p $-интерпретације $ I_{p} $ и $ q $-репрезентације $ R_{q} $:
-			\begin{displaymath}
-			I_{p}(R_{q}(k)) = I_{p}(d_{m}, d_{m-1}, \ldots, d_{0}).
-			\end{displaymath}
-			
-		$ R^{'} = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}, 0) $ - леви померај репрезентације $ R $\\
-		$ R^{''} = (d_{m}, d_{m-1}, \ldots , d_{1}) $ - десни померај репрезентације $ R $		
-	\end{frame}
-	
-	\begin{frame}{Приказ првих неколико бројева записаних у $ p $ и $ q $ систему, за $ a_{i} = 2 $, $ i \geq 1 $}
+	\begin{frame}{Приказ првих $ 15 $ бројева записаних у $ p $ и $ q $ систему, за $ a_{i} = 2 $, $ i \geq 1 $}
 		\begin{table}[h!]
 			\begin{center}
 				\begin{tabular}{ | c | c | c | c | c  c | c | c | c | c | c |}
@@ -326,52 +269,63 @@
 		\end{table}
 	\end{frame}
 	
-	\begin{frame}{Аритметичка карактеризација изгубљених позиција}
+%	\begin{frame}{Аритметичка карактеризација изгубљених позиција}
+%		
+%		Уколико је текућа позиција $ (x, y), 0 < x \leq y $, прво се рачуна $ R_{p}(x) $ и проверава се да ли се завршава парним или непарним бројем нула.
+%		subsection
+%		\begin{enumerate}
+%			\item \label{item:neparne_nule} Уколико се $ R_{p}(x) $ завршава непарним бројем нула, онда је $ x = B_{n} $, тако да је победнички потез $ (x, y) \rightarrow (I_{p}(R^{''}_{p}(x)), x) $.
+%			\item \label{item:parne_nule} Уколико се $ R_{p}(x) $ завршава парним бројем нула, онда је $ x = A_{n} $. Ако је $ y > I_{p}(R^{'}_{p}(x)) $ победнички потез је $ (x, y) \rightarrow (x, I_{p}(R^{'}_{p}(x)) $. У противном, ако је $ y < I_{p}(R^{'}_{p}(x) $, рачунамо $ d = y - x, m = \lfloor \frac{d}{a} \rfloor $. Уколико се $ R_{q}(m) $ завршава парним бројем нула, онда је $ A_{m} = I_{p}(R_{q}(m)) $; у противном je $ A_{m} = I_{p}(R_{q}(m)) + 1 $.
+%			У оба случаја победнички потез је $ (x, y) \rightarrow (A_{m}, A_{m} + ma) $.
+%		\end{enumerate}		
+%	\end{frame}
+	
+	
+		\begin{frame}{Аритметичка карактеризација изгубљених позиција}
 		
-		Уколико је текућа позиција $ (x, y), 0 < x \leq y $, прво се рачуна $ R_{p}(x) $ и проверава се да ли се завршава парним или непарним бројем нула.
-		
-		\begin{enumerate}
-			\item \label{item:neparne_nule} Уколико се $ R_{p}(x) $ завршава непарним бројем нула, онда је $ x = B_{n} $, тако да је победнички потез $ (x, y) \rightarrow (I_{p}(R^{''}_{p}(x)), x) $.
-			\item \label{item:parne_nule} Уколико се $ R_{p}(x) $ завршава парним бројем нула, онда је $ x = A_{n} $. Ако је $ y > I_{p}(R^{'}_{p}(x)) $ победнички потез је $ (x, y) \rightarrow (x, I_{p}(R^{'}_{p}(x)) $. У противном, ако је $ y < I_{p}(R^{'}_{p}(x) $, рачунамо $ d = y - x, m = \lfloor \frac{d}{a} \rfloor $. Уколико се $ R_{q}(m) $ завршава парним бројем нула, онда је $ A_{m} = I_{p}(R_{q}(m)) $; у противном je $ A_{m} = I_{p}(R_{q}(m)) + 1 $.
-			У оба случаја победнички потез је $ (x, y) \rightarrow (A_{m}, A_{m} + ma) $.
-		\end{enumerate}		
+		Нека је $ a = 2 $ и тренутна позиција $ (x, y) $ je:
+		\begin{itemize}
+			\item $ (17,29) $, како се $ R_{p}(17) = (1, 0, 0, 0)$ завршава непарним бројем нула, онда је $ B_{5} = 17 $ и $ I_{p}(R^{''}_{p}(17) = I_{p}(1, 0, 0) = 7 $ па је победнички потез $ (7, 17) $.
+			\item $ (11, 29) $, како се $ R_{p}(11) = (1, 1, 1) $ завршава парним бројем нула, онда је $ A_{8} = 11 $ и $ I_{p}(R^{'}_{p}(11)) = I_{p}(1, 1, 1, 0) = 27 $ па пошто је $ 29 > 27 $ победнички потез је $ (11, 27) $.
+			\item $ (11, 25) $, како се $ R_{p}(11) = (1, 1, 1) $ завршава парним бројем нула, онда је $ A_{8} = 11 $ и $ I_{p}(R^{'}_{p}(11)) = I_{p}(1, 1, 1, 0) = 27 $, па пошто је $ 25 < 27 $ рачуна се $ R_{q}(\lfloor \frac{y - x}{a} \rfloor) = R_{q}(7) = (1, 1, 0) $ и $ I_{p}(R_{q}(7)) = 10 $ па је победники потез $ (9, 23) $.
+			\item $ (11, 23) $, како се $ R_{p}(11) = (1, 1, 1) $ завршава парним бројем нула, онда је $ A_{8} = 11 $ и $ I_{p}(R^{'}_{p}(11)) = I_{p}(1, 1, 1, 0) = 27 $, па пошто је $ 23 < 27 $ рачуна се $ R_{q}(\lfloor \frac{y - x}{a} \rfloor) = R_{q}(6) = (1, 0, 1) $ и $ I_{p}(R_{q}(6)) = 8 $ па је победники потез $ (8, 20) $.
+		\end{itemize}		
 	\end{frame}
-
-\section{Имплементација и евалуација}
-
-\begin{frame}{Имплементација и евалуација}
 	
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/recursive.png}
-		\caption{График рекурзивне стратегије за конструкцију табеле изгубљених позиција
-		за $ n $ до $ 41943040 $}
-	\end{figure}
-	
-\end{frame}
+\section{Евалуација решења}
 
-\begin{frame}{Имплементација и евалуација}
-	
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/algebraic.png}
-		\caption{График алгебарске стратегије за конструкцију табеле изгубљених позиција за $ n $ до $ 41943040 $}
-	\end{figure}
-	
-\end{frame}
+%\begin{frame}{Имплементација и евалуација}
+%	
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/recursive.png}
+%		\caption{График рекурзивне стратегије за конструкцију табеле изгубљених позиција
+%		за $ n $ до $ 41943040 $}
+%	\end{figure}
+%	
+%\end{frame}
+%
+%\begin{frame}{Имплементација и евалуација}
+%	
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/algebraic.png}
+%		\caption{График алгебарске стратегије за конструкцију табеле изгубљених позиција за $ n $ до $ 41943040 $}
+%	\end{figure}
+%	
+%\end{frame}
+%
+%\begin{frame}{Имплементација и евалуација}
+%	
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/arithmetic.png}
+%		\caption{График аритметике стратегије за конструкцију табеле изгубљених позиција за $ n = 41943040 $}
+%	\end{figure}
+%	
+%\end{frame}
 
-\begin{frame}{Имплементација и евалуација}
-	
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.8\textwidth]{../src/statistics/picture/arithmetic.png}
-		\caption{График аритметике стратегије за конструкцију табеле изгубљених позиција за $ n = 41943040 $}
-	\end{figure}
-	
-\end{frame}
-
-
-\begin{frame}{Имплементација и евалуација}
+\begin{frame}{Евалуација решења}
 	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[width=\textwidth]{../src/statistics/picture/all.png}
@@ -379,7 +333,8 @@
 		\caption{Сумиран приказ извршавања свих стратегија за конструкцију табеле изгубљених позиција}
 	\end{figure}
 \end{frame}
-\begin{frame}{Имплементација и евалуација}	
+
+\begin{frame}{Евалуација решења}	
 	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[width=\textwidth]{../src/statistics/picture/algebraicVSrecursive.png}
