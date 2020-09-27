@@ -21,7 +21,6 @@
 \usepackage[T2A]{fontenc} % enable Cyrillic fonts
 \usepackage[utf8]{inputenc} % make weird characters work
 \usepackage[serbianc]{babel}
-
 % Enable colored hyperlinks
 \hypersetup{colorlinks=true}
 
@@ -38,6 +37,7 @@
 
 \DeclareMathOperator{\mex}{mex}
 \DeclareMathOperator{\comma}{,}
+\DeclareMathOperator{\equal}{=}
 \DeclareMathOperator{\leftbracket}{[}
 \DeclareMathOperator{\rightbracket}{]}
 \usetheme{Stanford} 
@@ -118,12 +118,10 @@
 %		\end{itemize}
 %	\end{frame}
 		
-	\begin{frame}{Пример тока игре нормалног нима}
+	\begin{frame}{Пример партије нормалног нима}
 		\begin{figure}
 	        \centering
 	        \includegraphics[width=0.8\textwidth]{../src/statistics/picture/NimPrimer.png}
-	        \caption{Ток ним игре}
-	        \label{fig:nimprimer}
 	    \end{figure}
 	\end{frame}
 
@@ -185,24 +183,70 @@
 	
 	    \begin{tcolorbox}[title=Рекурзивна карактеризација изгубљених позиција]
 	    	Све изгубљене позиције $ (A_{n}, B_{n}) $ могу се изразити на следећи начин:
-	    	\begin{eqnarray}
+	    	\begin{eqnarray*}
 		    	&A_{n} = &\mex \{ A_{i}, B_{i} : i < n \}\\
 		    	&B_{n} = &A_{n} + an
-	    	\end{eqnarray}
-	    \end{tcolorbox}
+	    	\end{eqnarray*}
+	   	\end{tcolorbox}
+	\end{frame}
+
+	\begin{frame}{Рекурзивна стратегија}
+		\examplebox{За $ a \equal 1 $ неке изгубљене позиције су:}{
+		\begin{table}[h!]
+			\begin{center}
+				\begin{tabular}{  c | c | c }
+					{\textbf{n}} &  {\textbf{A}} &  {\textbf{B}} \\
+					\hline
+					0 & 0 & 0 \\
+					1 & 1 & 1 + 1$ \cdot $1 = 2 \\
+					2 & 3 & 3 + 1$ \cdot $2 = 5 \\
+					3 & 4 & 4 + 1$ \cdot $3 = 7 
+				\end{tabular}
+			\end{center}
+		\end{table}}
+		\examplebox{За $ a \equal 2 $ неке изгубљене позиције су:}{
+			\begin{table}[h!]
+				\begin{center}
+					\begin{tabular}{  c | c | c }
+						{\textbf{n}} &  {\textbf{A}} &  {\textbf{B}} \\
+						\hline
+						0 & 0 & 0 \\
+						1 & 1 & 1 + 2$ \cdot $1 = 3\\
+						2 & 2 & 2 + 2$ \cdot $2 = 6\\
+						3 & 4 & 4 + 2$ \cdot $3 = 10
+					\end{tabular}
+				\end{center}
+		\end{table}}
 	\end{frame}
 
 	\begin{frame}{Алгебарска стратегија}
 		\begin{tcolorbox}[title=Алгебарска карактеризација изгубљених позиција]
-			Све изгубљене позиције $ (A_{n}, B_{n}) $ могу експлицитно изразити на следећи начин $ A_{n} = \lfloor \alpha \cdot n \rfloor, B_{n} = \lfloor \beta \cdot n \rfloor $, где је:
-			\begin{eqnarray}
+			Све изгубљене позиције $ (A_{n}, B_{n}) $ могу се изразити на следећи начин $ A_{n} = \lfloor \alpha \cdot n \rfloor, B_{n} = \lfloor \beta \cdot n \rfloor $, где је:
+			\begin{eqnarray*}
 				&\alpha = &\frac{2 - a + \sqrt{a^2 + 4}}{2} \label{def:alpha}\\  
 				&\beta = &\alpha + a \label{def:beta},
-			\end{eqnarray}
+			\end{eqnarray*}
 	    	овде су $ \alpha $ и $ \beta $ ирационални за свако $ a > 0 $
 		\end{tcolorbox}
 	\end{frame}
 	
+	\begin{frame}{Алгебарска стратегија}
+		\examplebox{За $ a \equal 2 $ онда је $ \alpha \equal \sqrt{3} $ и $ \beta \equal \sqrt{3} + 2 $ и неке изгубљене позиције су:}{
+			\begin{table}[h!]
+				\begin{center}
+					\begin{tabular}{  c | c | c }
+						{\textbf{n}} &  {\textbf{A}} &  {\textbf{B}} \\
+						\hline
+						0 & 0 & 0 \\
+						1 & $ \lfloor \sqrt{3} \cdot 1 \rfloor = 1 $ & $ \lfloor (\sqrt{3} + 2) \cdot 1 = 3 \rfloor $\\
+						2 & $ \lfloor \sqrt{3} \cdot 2 \rfloor = 2 $ & $ \lfloor (\sqrt{3} + 2) \cdot 2 = 6 \rfloor $\\
+						3 & $ \lfloor \sqrt{3} \cdot 3 \rfloor = 4 $ & $ \lfloor (\sqrt{3} + 2) \cdot 3 = 10 \rfloor $\\
+						4 & $ \lfloor \sqrt{3} \cdot 4 \rfloor = 5 $ & $ \lfloor (\sqrt{3} + 2) \cdot 4 = 13 \rfloor $\\
+						5 & $ \lfloor \sqrt{3} \cdot 5 \rfloor = 7 $ & $ \lfloor (\sqrt{3} + 2) \cdot 5 = 17 \rfloor $
+					\end{tabular}
+				\end{center}
+		\end{table}}
+	\end{frame}
 %	\begin{frame}{Рекурзивна и алгебарска карактеризација изгубљених позиција}
 %		\begin{itemize}
 %			\item Ако је $ x = B_{n} $ онда се из позиције $ (x = B_{n}, y) $ може једним потезом (скидањем жетона са гомиле на којој је $ y $ жетона) прећи у изгубљену позицију $ (A_{n}, B_{n}) $ 
@@ -212,32 +256,38 @@
 %	\end{frame}
 	
 	\begin{frame}{Рекурзивна и алгебарска карактеризација изгубљених позиција}
-		Нека је $ a = 1 $ и тренутна позиција $ (x, y) $ је:
+		Нека је $ a = 2 $ и тренутна позиција $ (x, y) $ је:
 		\begin{itemize}
-			\item $ (13, 29) $, како је $ B_{5} = 13 $, то се из позиције $ (13, 29) $ уклањајући $ 21 $ жетона прелази у позицију $ (A_{5}, B_{5}) = (8, 13) $. 
-			\item $ (12, 29) $, како је $ A_{8} = 12 $ и $ 29 > B_{8} = 20 $, то се из позиције $ (12, 29) $ уклањајући $ 9 $ жетона прелази у позицију $ (A_{8}, B_{8}) = (12, 20) $.
-			\item $ (12, 15) $, како је $ A_{8} = 12 $ и $ 15 < B_{8} = 20 $, то се из позиције $ (12, 15) $ уклањајући по $ 8 $ жетона са обе гомиле прелази у позицију $ (A_{3}, B_{3}) = (4, 7) $.
+			\item $ (17, 29) $, како је $ B_{5} = 17 $, то се из позиције $ (17, 29) $ уклањајући $ 22 $ жетона прелази у позицију $ (A_{5}, B_{5}) = (7, 17) $. 
+			\item $ (11, 29) $, како је $ A_{8} = 11 $ и $ 29 > B_{8} = 27 $, то се из позиције $ (11, 29) $ уклањајући $ 2 $ жетона прелази у позицију $ (A_{8}, B_{8}) = (11, 27) $.
+			\item $ (11, 25) $, како је $ A_{8} = 11 $ и $ 25 < B_{8} = 27 $, то се из позиције $ (11, 25) $ уклањајући по $ 2 $ жетона са обе гомиле прелази у позицију $ (A_{7}, B_{7}) = (9, 23) $.
 		\end{itemize}
 	\end{frame}
 	
 	
 	\begin{frame}{Аритметичка стратегија}
 		\begin{tcolorbox}
-			[title=Нека је $ \leftbracket a_{0}\comma a_{1}\comma a_{2}\comma \ldots \rightbracket $ верижни развој броја $ \alpha $ и за низове $ p_{n} $ и $ q_{n} $ важи следећа рекурентна релација:]
-			\begin{eqnarray}
-			p_{-1} = 1,\ p_{0} = a_{0},\ p_{n} = a_{n}p_{n-1} + p_{n-2},\ (n \geq 1 )\\
-			q_{-1} = 0,\ q_{0} = 1,\ q_{n} = a_{n}q_{n-1} + q_{n-2},\ (n \geq 1 ).
-			\end{eqnarray}
+			[title=Нека је $ \leftbracket a_{0}\comma a_{1}\comma a_{2}\comma \ldots \rightbracket $ верижни развој броја $ \alpha $ и за низове $ p_{n} $ и $ q_{n} $ (бројилаца и именилаца конвергената) важи следећа рекурентна релација:]
+				$ p_{-1} = 1,\ p_{0} = a_{0},\ p_{n} = a_{n}p_{n-1} + p_{n-2},\ (n \geq 1 )\\
+				q_{-1} = 0,\ q_{0} = 1,\ q_{n} = a_{n}q_{n-1} + q_{n-2},\ (n \geq 1 ) $
 		\end{tcolorbox}
+	
+		\examplebox{Нека је верижни развој броја $ \alpha \equal \leftbracket 1\comma 2\comma 2 \ldots \rightbracket \equal 1 + \frac{1}{2 + \frac{1}{2 + \ldots}} $ чији су конвергенти:}
+		{$ 	C_{0} = 1 = \frac{p_{0}}{q_{0}},\\ 
+			C_{1} = [1, 2] = 1 + \frac{1}{2} = \frac{3}{2} = \frac{p_{1}}{q_{1}},\\ 
+			C_{3} = [1, 2, 2] = 1 + \frac{1}{2 + \frac{1}{2}} = \frac{7}{5} = \frac{p_{3}}{q_{3}},\\ \ldots $}	
 	\end{frame}
-
+	
 	\begin{frame}{Аритметичка стратегија}
-		\begin{itemize}
-			\item Репрезентација $ R $ је $ R = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}), \ 0 \leq d_{i} \leq a_{i+1} $
-			\item Леви померај репрезентације $ R $ је $ R^{'} = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}, 0) $
-			\item Десни померај репрезентације $ R $ је $ R^{''} = (d_{m}, d_{m-1}, \ldots , d_{1}) $
-			\item Веза $ p $-интерпретације $ I_{p} $ и $ q $-репрезентације $ R_{q} $ је $ I_{p}(R_{q}(k)) = I_{p}(d_{m}, d_{m-1}, \ldots, d_{0}) $
-		\end{itemize}
+		\begin{tcolorbox}[title=Репрезентација $ R $ је:]
+			$ R = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}), \ 0 \leq d_{i} \leq a_{i+1} $
+		\end{tcolorbox}
+		\begin{tcolorbox}[title=$ p $-репрезентација $ R_{p} $ броја $ k $ је:]
+			$ R_{p}(k) = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}) $
+		\end{tcolorbox}
+		\begin{tcolorbox}[title=$ q $-репрезентација $ R_{q} $ броја $ k $ је:]
+			$ R_{q}(k) = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}) $
+		\end{tcolorbox}
 	\end{frame}
 	
 	\begin{frame}{Приказ првих $ 15 $ бројева записаних у $ p $ и $ q $ систему, за $ a_{i} = 2 $, $ i \geq 1 $}
@@ -267,6 +317,18 @@
 				\end{tabular}
 			\end{center}
 		\end{table}
+	\end{frame}
+	
+	\begin{frame}{Аритметичка стратегија}
+		\begin{tcolorbox}[title=Леви померај репрезентације $ R $ је:]
+			$ R^{'} = (d_{m}, d_{m-1}, \ldots , d_{1}, d_{0}, 0) $
+		\end{tcolorbox}
+		\begin{tcolorbox}[title=Десни померај репрезентације $ R $ је:]
+			$ R^{''} = (d_{m}, d_{m-1}, \ldots , d_{1}) $
+		\end{tcolorbox}
+		\begin{tcolorbox}[title=Веза $ p $-интерпретације $ I_{p} $ и $ q $-репрезентације $ R_{q} $ је:]
+			$ I_{p}(R_{q}(k)) = I_{p}(d_{m}, d_{m-1}, \ldots, d_{0}) $
+		\end{tcolorbox}
 	\end{frame}
 	
 %	\begin{frame}{Аритметичка карактеризација изгубљених позиција}
@@ -330,7 +392,7 @@
 		\begin{center}
 			\includegraphics[width=\textwidth]{../src/statistics/picture/all.png}
 		\end{center}
-		\caption{Сумиран приказ извршавања свих стратегија за конструкцију табеле изгубљених позиција}
+		\caption*{Сумирани приказ извршавања свих стратегија за конструкцију табеле изгубљених позиција}
 	\end{figure}
 \end{frame}
 
@@ -339,7 +401,7 @@
 		\begin{center}
 			\includegraphics[width=\textwidth]{../src/statistics/picture/algebraicVSrecursive.png}
 		\end{center}
-		\caption{Сумиран приказ извршавања рекурзивне и алгебарске стратегије за конструкцију табеле изгубљених позиција}
+		\caption*{Сумирани приказ извршавања рекурзивне и алгебарске стратегије за конструкцију табеле изгубљених позиција}
 	\end{figure}
 \end{frame}
 
